@@ -501,6 +501,9 @@ def match_filter(template_names, template_list, st, threshold,
         print('Starting the correlation run for this day')
 	print('at pt 3 len templates is ' + str(len(templates[0][0])))
     [cccsums, no_chans] = _channel_loop(templates, stream, cores, debug)
+    if threshold_type == 'reversed_cc'
+    	reversed_templates = reverse_template_gen(templates)
+	[reversed_cccsums, reversed_nochans] = _channel_loop(reversed_templates,stream,cores,debug)
     if len(cccsums[0]) == 0:
         raise ValueError('Correlation has not run, zero length cccsum')
     outtoc = time.clock()
@@ -523,9 +526,9 @@ def match_filter(template_names, template_list, st, threshold,
         elif threshold_type == 'av_chan_corr':
             rawthresh = threshold * (cccsum / len(template))
         elif threshold_type == 'reversed_cc':
-	    reversed_templates = reverse_template_gen(templates) 
-	    [reverse_cccsums, reverse_nochans] = _channel_loop(reversed_templates, stream, cores, debug)
-	    rawthresh = np.amin(reverse_cccsums)		
+	   # reversed_templates = reverse_template_gen(templates) 
+	   # [reverse_cccsums, reverse_nochans] = _channel_loop(reversed_templates, stream, cores, debug)
+	    rawthresh = np.amin(reversed_cccsums[i])		
     	else:
             print('You have not selected the correct threshold type, I will' +
                   'use MAD as I like it')
@@ -561,6 +564,15 @@ def match_filter(template_names, template_list, st, threshold,
                                  stream[0].stats.starttime.
                                  datetime.strftime('%Y-%m-%d') +
                                  '.' + plot_format)
+	    if debug >= 2 and threshold_type == 'reversed_cc': #plot the reverse cccsum for debug
+		r_cccsum_plot = Trace(reversed_cccsums[i])
+		r_cccsum_plot.stats.sampling_rate = stream[0].stats.sampling_rate
+		r_cccsum_hist = r_cccsum_plot.copy()
+		r_cccsum_hist = r_cccsum_hist.decimate(int(stream[0].stats.sampling_rate/10)).data
+		r_cccsum_plot = plotting.chunk_data(r_cccsum_plot, 10, 'Maxabs').data
+		r_cccsum_plot = r_cccsum_plot[0:len(stream_plot.data)]
+		r_cccsum_hist = r_cccsum_hist[0:len(stream_plot.data)]
+		plotting.triple_plot(r_cccsum_plot, r_cccsum_hist, stream_plot, rawthresh, True, plotdir + '/r_cccsum_plot_' + template_names[i] + '_' + stream[0].stats.starttime.datetime.strftime('%Y-%m-%d')+'.'+plot_format)
             if debug >= 4:
                 print(' '.join(['Saved the cccsum to:', template_names[i],
                                 stream[0].stats.starttime.datetime.
