@@ -234,6 +234,10 @@ def _channel_loop(templates, stream, cores=1, debug=0):
     from multiprocessing import Pool
     from eqcorrscan.utils.timer import Timer
     num_cores = cores
+    print('running channel corr')
+    print(str(num_cores))
+    print(str(len(templates)))
+    print('len stream is ' + str(len(stream)))
     if len(templates) < num_cores:
         num_cores = len(templates)
     if 'cccs_matrix' in locals():
@@ -244,6 +248,8 @@ def _channel_loop(templates, stream, cores=1, debug=0):
 
     # Note: This requires all templates to be the same length, and all channels
     # to be the same length
+    print('stream is ' + str(len(stream[0])))
+    print('templates are ' + str(len(templates[0][0].data)))
     cccs_matrix = np.array([np.array([np.array([0.0] * (len(stream[0].data) -
                                      len(templates[0][0].data) + 1))] *
                             len(templates))] * 2)
@@ -337,9 +343,128 @@ def _channel_loop(templates, stream, cores=1, debug=0):
     cccsums = cccs_matrix[0]
     return cccsums, no_chans
 
+def reverse_template_gen(template_names, template_list, st, cores=1, tempdir=False, debug=0):
+    import numpy as np
+    import matplotlib
+   # matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    plt.ioff()
+    import copy
+    from eqcorrscan.utils import plotting
+    from eqcorrscan.utils import findpeaks
+    from obspy import Trace
+    import time
+
+    reversed_templates = copy.deepcopy(template_list)
+    for reversed_template in reversed_templates:
+    	for reversed_tr in reversed_template:
+	    reversed_tr.data=reversed_tr.data[::-1]
+
+    stream = st.copy()
+    for tr in stream:
+	    if not tr.stats.sampling_rate * 86400 == tr.stats.npts:
+        	    msg = ' '.join(['Data are not daylong for', tr.stats.station,
+                            tr.stats.channel])
+		    raise ValueError(msg)
+    # Call the _template_loop function to do all the correlation work
+    #outtic = time.clock()
+    # Edit here from previous, stable, but slow match_filter
+    # Would be worth testing without an if statement, but with every station in
+    # the possible template stations having data, but for those without real
+    # data make the data NaN to return NaN ccc_sum
+    # Note: this works
+    #if debug >= 2:
+     #   print('Ensuring all template channels have matches in daylong data')
+    template_stachan = []
+    for template in reversed_templates:
+	for tr in template:
+		template_stachan += [(tr.stats.station, tr.stats.channel)]
+    template_stachan = list(set(template_stachan))
+    # Copy this here to keep it safe
+    for stachan in template_stachan:
+	print('station' + stachan[0], 'channel' + stachan[1])
+	print(stream[0].stats.station, stream[0].stats.channel)
+        if not stream.select(station=stachan[0]+"*", channel=stachan[1]):
+            # Remove template traces rather than adding NaN data
+            for template in reversed_templates:
+                if template.select(station=stachan[0], channel=stachan[1]):
+                    for tr in template.select(station=stachan[0],
+                                              channel=stachan[1]):
+                        template.remove(tr)
+    # Remove un-needed channels
+    #temp2 = templates[0]
+    #print('at pt 2 len templates is ' + str(len(temp2)))
+    #print('len stream is ' + str(len(stream)))
+    for tr in stream:
+	if not (tr.stats.station, tr.stats.channel) in template_stachan:
+            stream.remove(tr)
+    #print('len stream is at pt 3 ' + str(len(stream)))
+    # Also pad out templates to have all channels
+    #for template in reversed_templates:
+#	for stachan in template_stachan:
+#		if not template.select(station=stachan[0], channel=stachan[1]):
+ #               	nulltrace = Trace()
+  #              	nulltrace.stats.station = stachan[0]
+   #             	nulltrace.stats.channel = stachan[1]
+    #            	print('len of templates is ' + str(len(template)))
+			#print(str(template[0].stats.starttime))
+			#nulltrace.stats.sampling_rate = template[0].stats.sampling_rate
+                	#nulltrace.stats.starttime = template[0].stats.starttime
+                	#nulltrace.data = np.array([np.NaN] * len(template[0].data),
+                         #                 dtype=np.float32)
+                	#template += nulltrace
+   # if debug >= 2:
+    #    print('Starting the correlation run for this day')
+	#print('at pt 3 len templates is ' + str(len(templates[0][0])))
+ 	#obtain the reversed templates and the reverse ccc sums
+    	#reversed_templates = reverse_template_gen(templates)
+    [reversed_cccsums, reversed_nochans] = _channel_loop(reversed_templates,stream,cores,debug)
+    np.save('rcccsum'+stream[0].stats.starttime.datetime.strftime('%Y%j'), reversed_cccsums)
+    return reversed_cccsums
+
+def reverse_threshold_gen(r_ccc_list, bandwidth, FAR, cores=1, debug=0):
+    import copy
+    import numpy as np
+    from obspy import Trace
+    import scipy
+    from scipy.stats import norm
+    from math import sqrt, log
+
+    r_cccsums = copy.deepcopy(r_ccc_list)
+    r_cccsums = [np.load(r_ccc_file) for r_ccc_file in r_ccc_list]
+    for i, r_cccsum in enumerate(r_cccsums):
+	    if i == 0:
+		    for j, rc_template in enumerate(r_cccsum):
+			    if j == 0:
+				    r_cccsum_hist = rc_template
+			    else:
+				    r_cccsum_hist = np.stack((r_cccsum_hist,rc_template))
+	    else:
+		    r_cccsum_hist = np.concatenate((r_cccsum_hist, r_cccsum),axis=1)
+    #	for j,r_cccsum in enumerate(reversed_cccsums[i]):
+#		if j == 0:
+#		r_cccsum_hist[i] = Trace(reversed_cccsums[i][j])
+#	else:
+#		r_cccsum_hist[i].data = np.sum((r_cccsum_hist.data, Trace(reversed_cccsums[i][j]).data), axis=0)
+		#r_cccsum_hist.data[:] + Trace(reversed_cccsums[i])[:]
+    #T_ave = 31557600/FAR; #seconds between false detections per year
+    T_ave = (1727901*365.25)/FAR #number of samples between false detections each year.
+    for i, rc_template in enumerate(r_cccsum_hist): 
+    	np.save('rcccsum_template_'+str(i), rc_template)
+	param = norm.fit(rc_template)
+    	variance = param[1]*param[1]
+    	print('we got a gaussian with mean ' + str(param[0]) + ' and variance ' + str(variance) + 'for template' + str(i))
+    	rawthresh = sqrt(2*variance*log(T_ave*bandwidth))
+    	print('the threshold from reversing the templates was ' + str(rawthresh))
+    	if i == 0:
+		thresholds = rawthresh
+	else:
+		thresholds = np.append(thresholds,rawthresh)
+    np.save('template_thresholds', thresholds)
+    return thresholds
 
 def match_filter(template_names, template_list, st, threshold,
-                 threshold_type, trig_int, plotvar, plotdir='.', cores=1,
+                 threshold_type, trig_int, plotvar, threshold_file='None', plotdir='.', cores=1,
                  tempdir=False, debug=0, plot_format='jpg'):
     r"""Over-arching code to run the correlations of given templates with a \
     day of seismic data and output the detections based on a given threshold.
@@ -357,7 +482,7 @@ def match_filter(template_names, template_list, st, threshold,
         the templates.  This will now remove excess traces internally, but \
         will copy the stream and work on the copy, leaving your input stream \
         untouched.
-    :type threshold: float
+    :type threshold: float; set to the actual threshold if the threshold_type is 'reverse_ccsum'
     :param threshold: A threshold value set based on the threshold_type
     :type threshold_type: str
     :param threshold_type: The type of threshold to be used, can be MAD, \
@@ -396,8 +521,9 @@ def match_filter(template_names, template_list, st, threshold,
         matplotlib has no effect, which will mean that match_filter has not \
         changed the plotting behaviour.
     """
+    import numpy as np
     import matplotlib
-    matplotlib.use('Agg')
+   # matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     plt.ioff()
     import copy
@@ -405,7 +531,10 @@ def match_filter(template_names, template_list, st, threshold,
     from eqcorrscan.utils import findpeaks
     from obspy import Trace
     import time
-
+    import scipy
+    from scipy.stats import norm
+    from math import sqrt, log
+    import glob
     # Copy the stream here because we will muck about with it
     stream = st.copy()
     templates = copy.deepcopy(template_list)
@@ -428,6 +557,9 @@ def match_filter(template_names, template_list, st, threshold,
             print('I have daylong data for these stations:')
             print(data_stachan)
     # Perform a check that the daylong vectors are daylong
+    #temp1 = templates[0]
+    #print('at pt 1 len templates is ' + str(len(temp1)))
+    #print('len stream is ' + str(len(stream)))
     for tr in stream:
         if not tr.stats.sampling_rate * 86400 == tr.stats.npts:
             msg = ' '.join(['Data are not daylong for', tr.stats.station,
@@ -449,7 +581,9 @@ def match_filter(template_names, template_list, st, threshold,
     template_stachan = list(set(template_stachan))
     # Copy this here to keep it safe
     for stachan in template_stachan:
-        if not stream.select(station=stachan[0], channel=stachan[1]):
+	print('station' + stachan[0], 'channel' + stachan[1])
+	print(stream[0].stats.station, stream[0].stats.channel)
+        if not stream.select(station=stachan[0]+"*", channel=stachan[1]):
             # Remove template traces rather than adding NaN data
             for template in templates:
                 if template.select(station=stachan[0], channel=stachan[1]):
@@ -457,9 +591,13 @@ def match_filter(template_names, template_list, st, threshold,
                                               channel=stachan[1]):
                         template.remove(tr)
     # Remove un-needed channels
+    #temp2 = templates[0]
+    #print('at pt 2 len templates is ' + str(len(temp2)))
+    #print('len stream is ' + str(len(stream)))
     for tr in stream:
         if not (tr.stats.station, tr.stats.channel) in template_stachan:
             stream.remove(tr)
+    print('len stream is at pt 3 ' + str(len(stream)))
     # Also pad out templates to have all channels
     for template in templates:
         for stachan in template_stachan:
@@ -467,14 +605,19 @@ def match_filter(template_names, template_list, st, threshold,
                 nulltrace = Trace()
                 nulltrace.stats.station = stachan[0]
                 nulltrace.stats.channel = stachan[1]
-                nulltrace.stats.sampling_rate = template[0].stats.sampling_rate
+                print('len of templates is ' + str(len(template)))
+		print(str(template[0].stats.starttime))
+		nulltrace.stats.sampling_rate = template[0].stats.sampling_rate
                 nulltrace.stats.starttime = template[0].stats.starttime
                 nulltrace.data = np.array([np.NaN] * len(template[0].data),
                                           dtype=np.float32)
                 template += nulltrace
     if debug >= 2:
         print('Starting the correlation run for this day')
+	#print('at pt 3 len templates is ' + str(len(templates[0][0])))
     [cccsums, no_chans] = _channel_loop(templates, stream, cores, debug)
+		
+
     if len(cccsums[0]) == 0:
         raise ValueError('Correlation has not run, zero length cccsum')
     outtoc = time.clock()
@@ -486,16 +629,27 @@ def match_filter(template_names, template_list, st, threshold,
         print(' '.join(['This is from', str(len(templates)), 'templates']))
         print(' '.join(['Correlated with', str(len(stream)),
                         'channels of data']))
+    print('at pt 3 len templates is ' + str(len(templates[0])))
     detections = []
+    thresholds = [] #to check the threshold types
+    if threshold_type == 'reversed_cc':
+	    r_ccc_list = glob.glob('rcccsum_template*')
     for i, cccsum in enumerate(cccsums):
         template = templates[i]
         if threshold_type == 'MAD':
             rawthresh = threshold * np.median(np.abs(cccsum))
         elif threshold_type == 'absolute':
             rawthresh = threshold
-        elif threshold == 'av_chan_corr':
+        elif threshold_type == 'av_chan_corr':
             rawthresh = threshold * (cccsum / len(template))
-        else:
+        elif threshold_type == 'reversed_cc':
+	    rawthresh = threshold_file[i]
+	    rcccsum = np.load(r_ccc_list[i])
+		#obtain the threshold based on desired FAR
+	   # reversed_templates = reverse_template_gen(templates) 
+	   # [reverse_cccsums, reverse_nochans] = _channel_loop(reversed_templates, stream, cores, debug)
+	   # rawthresh = np.amin(reversed_cccsums[i])		
+    	else:
             print('You have not selected the correct threshold type, I will' +
                   'use MAD as I like it')
             rawthresh = threshold * np.mean(np.abs(cccsum))
@@ -503,6 +657,7 @@ def match_filter(template_names, template_list, st, threshold,
         print(' '.join(['Threshold is set at:', str(rawthresh)]))
         print(' '.join(['Max of data is:', str(max(cccsum))]))
         print(' '.join(['Mean of data is:', str(np.mean(cccsum))]))
+	thresholds.append(rawthresh) 
         if np.abs(np.mean(cccsum)) > 0.05:
             warnings.warn('Mean is not zero!  Check this!')
         # Set up a trace object for the cccsum as this is easier to plot and
@@ -530,7 +685,23 @@ def match_filter(template_names, template_list, st, threshold,
                                  stream[0].stats.starttime.
                                  datetime.strftime('%Y-%m-%d') +
                                  '.' + plot_format)
-            if debug >= 4:
+	    if threshold_type == 'reversed_cc':
+		#r_cccsum_hists = np.load(r_cccfile)
+		r_cccsum_hist = Trace(rcccsum)
+
+#	stream_plot=copy.deepcopy(stream[0])
+#	stream_plot.decimate(int(stream[0].stats.sampling_rate/10))
+	#r_cccsum_plot = r_cccsum_hist.copy()
+	#r_cccsum_plot.stats.sampling_rate = stream[0].stats.sampling_rate
+		#r_cccsum_hist = r_cccsum_plot.copy()
+		r_cccsum_hist.stats.sampling_rate=stream[0].stats.sampling_rate
+		r_cccsum_hist = r_cccsum_hist.decimate(int(stream[0].stats.sampling_rate/10)).data
+		r_cccsum_hist = r_cccsum_hist[0:len(stream_plot.data)]
+	#plotting.triple_plot(r_cccsum_plot, r_cccsum_hist, stream_plot, rawthresh, True, plotdir + '/r_cccsum_plot_' + template_names[i] + '_' + stream[0].stats.starttime.datetime.strftime('%Y-%m-%d')+'.'+plot_format)
+            	#if debug >= 4
+		plotting.dist_overlay(cccsum_hist, r_cccsum_hist, rawthresh, save=True, savefile=plotdir+'/overlay_hist_'+template_names[i]+'_'+stream[0].stats.starttime.datetime.strftime('%Y-%m-%d')+'.pdf')
+    #if debug >= 4:
+	    if debug >= 4:
                 print(' '.join(['Saved the cccsum to:', template_names[i],
                                 stream[0].stats.starttime.datetime.
                                 strftime('%Y%j')]))
@@ -565,6 +736,7 @@ def match_filter(template_names, template_list, st, threshold,
                                             no_chans[i], peak[0], rawthresh,
                                             'corr'))
     del stream, templates
+    np.savetxt('thresholds_for_'+threshold_type+'.txt', thresholds, delimiter=',')
     return detections
 
 

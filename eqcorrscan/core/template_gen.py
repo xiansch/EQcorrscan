@@ -98,6 +98,8 @@ def from_sac(sac_files, lowcut, highcut, samp_rate, filt_order, length, swin,
                                   samp_rate, debug)
     template = _template_gen(picks=event.picks, st=st, length=length,
                              swin=swin, prepick=prepick, plot=plot)
+    #temp0 = template[0]
+    #print("station name is " + temp0.stats.station)
     return template
 
 
@@ -642,6 +644,8 @@ def _template_gen(picks, st, length, swin='all', prepick=0.05, plot=False):
     stations = []
     channels = []
     st_stachans = []
+    if not swin in ['P', 'all', 'S']:
+	raise IOError('Phase type is not in [all, P, S]')
     for pick in picks:
         # Check to see that we are only taking the appropriate picks
         if swin == 'all':
@@ -658,8 +662,8 @@ def _template_gen(picks, st, length, swin='all', prepick=0.05, plot=False):
             stations.append(pick.waveform_id.station_code)
             channels.append(pick.waveform_id.channel_code[0] +
                             pick.waveform_id.channel_code[-1])
-        else:
-            raise IOError('Phase type is not in [all, P, S]')
+        #else:
+         #   raise IOError('Phase type is not in [all, P, S]')
     for tr in st:
         st_stachans.append('.'.join([tr.stats.station, tr.stats.channel]))
     for i, station in enumerate(stations):
@@ -734,8 +738,10 @@ def _template_gen(picks, st, length, swin='all', prepick=0.05, plot=False):
             print(tr.stats.endtime)
             if 'st1' not in locals():
                 st1 = Stream(tr)
+		print('st1 not in locals with len' + str(len(st1)))
             else:
                 st1 += tr
+		print('st1 in locals with len' + str(len(st1)))
         else:
             print('No pick for ' + tr.stats.station + '.' + tr.stats.channel)
         # Ensure that the template is the correct length
@@ -746,7 +752,8 @@ def _template_gen(picks, st, length, swin='all', prepick=0.05, plot=False):
                                  10,
                                  st1.sort(['starttime'])[-1].stats.endtime +
                                  10)
-        tplot(st1, background=background,
+	savefile='template_'+str(st1[0].stats.starttime)+'.pdf'
+        tplot(st1, save=True,savefile=savefile,background=background,
               title='Template for '+str(st1[0].stats.starttime),
               picks=picks)
         del stplot
