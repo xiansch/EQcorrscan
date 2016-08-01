@@ -6,7 +6,11 @@ data available online.
 
 def mktemplates(network_code='GEONET',
                 publicIDs=['2016p008122', '2016p008353', '2016p008155',
+<<<<<<< HEAD
                            '2016p008194']):
+=======
+                           '2016p008194'], plot=True):
+>>>>>>> upstream/master
     """Functional wrapper to make templates"""
 
     from collections import Counter
@@ -43,6 +47,7 @@ def mktemplates(network_code='GEONET',
                                          includearrivals=True)
 
     # Lets plot the catalog to see what we have
+<<<<<<< HEAD
     catalog.plot(projection='local', resolution='h')
 
     # We don't need all the picks, lets take the information from the
@@ -52,12 +57,43 @@ def mktemplates(network_code='GEONET',
         all_picks += [(pick.waveform_id.station_code) for pick in event.picks]
     all_picks = Counter(all_picks).most_common(5)
     all_picks = [pick[0] for pick in all_picks]
+=======
+    if plot:
+        catalog.plot(projection='local', resolution='h')
+
+    # We don't need all the picks, lets take the information from the
+    # five most used stations - note that this is done to reduce computational
+    # costs.
+    all_picks = []
+    for event in catalog:
+        all_picks += [(pick.waveform_id.station_code,
+                       pick.waveform_id.channel_code) for pick in event.picks]
+    # Python 3.x and python 2.7 do not sort in the same way, this is a cludge
+    # to work around that...
+    counted = Counter(all_picks).most_common()
+    # Going to take an initial set that all have atleast 1 less pick than the
+    # highest pick-count...
+    all_picks = []
+    for i in range(counted[0][1]):
+        highest = [item[0] for item in counted if item[1] >= counted[0][1] - i]
+        # Sort them by alphabetical order in station
+        highest = sorted(highest, key=lambda tup: tup[0])
+        all_picks += highest
+        if len(all_picks) > 5:
+            all_picks = all_picks[0:5]
+            break
+>>>>>>> upstream/master
 
     for event in catalog:
         if len(event.picks) == 0:
             raise IOError('No picks found')
         event.picks = [pick for pick in event.picks
+<<<<<<< HEAD
                        if pick.waveform_id.station_code in all_picks]
+=======
+                       if (pick.waveform_id.station_code,
+                           pick.waveform_id.channel_code) in all_picks]
+>>>>>>> upstream/master
 
     # Now we can generate the templates
     templates = template_gen.from_client(catalog=catalog,
@@ -65,7 +101,11 @@ def mktemplates(network_code='GEONET',
                                          lowcut=2.0, highcut=9.0,
                                          samp_rate=20.0, filt_order=4,
                                          length=3.0, prepick=0.15,
+<<<<<<< HEAD
                                          swin='all', debug=1, plot=True)
+=======
+                                         swin='all', debug=0, plot=plot)
+>>>>>>> upstream/master
 
     # We now have a series of templates! Using Obspys Stream.write() method we
     # can save these to disk for later use.  We will do that now for use in the

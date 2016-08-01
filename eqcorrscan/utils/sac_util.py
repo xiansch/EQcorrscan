@@ -2,12 +2,16 @@
 Part of the EQcorrscan package: tools to convert SAC headers to obspy event \
 objects.
 
+<<<<<<< HEAD
 Authors: Calum Chamberlain and the EQcorrscan developers.
 
+=======
+>>>>>>> upstream/master
 .. note:: This functionality is not supported for obspy versions below \
     1.0.0 as references times are not read in by SACIO, which are needed \
     for defining pick times.
 
+<<<<<<< HEAD
 This file is part of EQcorrscan.
 
     EQcorrscan is free software: you can redistribute it and/or modify
@@ -22,6 +26,14 @@ This file is part of EQcorrscan.
 
     You should have received a copy of the GNU General Public License
     along with EQcorrscan.  If not, see <http://www.gnu.org/licenses/>.
+=======
+:copyright:
+    Calum Chamberlain, Chet Hopp.
+
+:license:
+    GNU Lesser General Public License, Version 3
+    (https://www.gnu.org/copyleft/lesser.html)
+>>>>>>> upstream/master
 """
 from __future__ import absolute_import
 from __future__ import division
@@ -41,18 +53,46 @@ def _version_check():
 
 def sactoevent(st, debug=0):
     """
+<<<<<<< HEAD
     Function to convert SAC headers to obspy event class.
 
     :type st: obspy.core.Stream
+=======
+    Convert SAC headers (picks only) to obspy event class.
+    Picks \
+    are taken from header values a, t[0-9].
+
+    :type st: obspy.core.stream.Stream
+>>>>>>> upstream/master
     :param st: Stream of waveforms including SAC headers.
     :type debug: int
     :pram debug: Debug level, larger number = more output.
 
+<<<<<<< HEAD
     :returns: obspy.core.Event
+=======
+    :returns: obspy.core.evebt.Event
+>>>>>>> upstream/master
 
     .. note:: This functionality is not supported for obspy versions below \
         1.0.0 as references times are not read in by SACIO, which are needed \
         for defining pick times.
+<<<<<<< HEAD
+=======
+
+    .. note:: Takes the event origin information from the first trace in the \
+        stream - to ensure this works as you expect, please populate the \
+        evla, evlo, evdp and nzyear, nzjday, nzhour, nzmin, nzsec, nzmsec \
+        for all traces with the same values.
+
+    >>> from obspy import read, UTCDateTime
+    >>> st = read('eqcorrscan/tests/test_data/SAC/2014p611252/*')
+    >>> event = sactoevent(st)
+    >>> print(event.origins[0].time)
+    2014-08-15T03:55:21.057000Z
+    >>> print(event.picks[0].phase_hint)
+    S
+>>>>>>> upstream/master
     """
     from obspy.core.event import Event, Origin, WaveformStreamID, Pick
     from obspy import Stream, UTCDateTime
@@ -78,7 +118,11 @@ def sactoevent(st, debug=0):
     # Now we need to create an event!
     event = Event()
     event.origins.append(Origin())
+<<<<<<< HEAD
     print(st[0].stats.sac.keys())
+=======
+    # print(st[0].stats.sac.keys())
+>>>>>>> upstream/master
     event.origins[0].time = UTCDateTime(year=st[0].stats.sac.nzyear,
                                         julday=st[0].stats.sac.nzjday,
                                         hour=st[0].stats.sac.nzhour,
@@ -101,6 +145,13 @@ def sactoevent(st, debug=0):
         event.origins[0].latitude = np.nan
         event.origins[0].longitude = np.nan
         event.origins[0].depth = np.nan
+<<<<<<< HEAD
+=======
+    except AttributeError:
+        event.origins[0].latitude = np.nan
+        event.origins[0].longitude = np.nan
+        event.origins[0].depth = np.nan
+>>>>>>> upstream/master
 
     # Add in the picks
     for tr in st:
@@ -132,6 +183,13 @@ def sactoevent(st, debug=0):
                         tr.stats.station + '.' + tr.stats.channel
                     warnings.warn(msg)
                 continue
+<<<<<<< HEAD
+=======
+            if debug > 0:
+                msg = 'Found pick in position ' + pick_key + ' for trace: ' +\
+                    tr.stats.station + '.' + tr.stats.channel
+                print(msg)
+>>>>>>> upstream/master
             waveform_id = WaveformStreamID(station_code=tr.stats.station,
                                            network_code=tr.stats.network,
                                            channel_code=tr.stats.channel)
@@ -139,5 +197,43 @@ def sactoevent(st, debug=0):
                         phase_hint=phase_hint,
                         time=pick_time)
             event.picks.append(pick)
+<<<<<<< HEAD
 
     return event
+=======
+        # Also check header slots 'a' and 'ka'
+        try:
+            if tr.stats.sac['a'] == float_nan:
+                if debug > 1:
+                    msg = 'No pick in position ' + pick_key + \
+                        ' for trace: ' + tr.stats.station + '.' + \
+                        tr.stats.channel
+                    warnings.warn(msg)
+                continue
+            pick_time = reference_time + tr.stats.sac['a']
+            phase_hint = tr.stats.sac['ka'].split()[0]
+        except KeyError:
+            if debug > 1:
+                msg = 'No pick in position ' + pick_key + ' for trace: ' +\
+                    tr.stats.station + '.' + tr.stats.channel
+                warnings.warn(msg)
+            continue
+        if debug > 0:
+            msg = 'Found pick in position a for trace: ' +\
+                tr.stats.station + '.' + tr.stats.channel
+            print(msg)
+        waveform_id = WaveformStreamID(station_code=tr.stats.station,
+                                       network_code=tr.stats.network,
+                                       channel_code=tr.stats.channel)
+        pick = Pick(waveform_id=waveform_id,
+                    phase_hint=phase_hint,
+                    time=pick_time)
+        event.picks.append(pick)
+
+    return event
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+>>>>>>> upstream/master

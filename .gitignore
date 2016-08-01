@@ -4,7 +4,10 @@
 .Spotlight-V100
 .Trashes
 .DS_Store
+<<<<<<< HEAD
 *.ms
+=======
+>>>>>>> upstream/master
 *.buf
 *.hdr
 templates
@@ -15,9 +18,23 @@ matcherr_*
 build
 dist
 EQcorrscan.egg-info
+<<<<<<< HEAD
 *.xml
+=======
+>>>>>>> upstream/master
 .cache
 .eggs
 .tox
 eqcorrscan/tutorials/*.jpg
 pytest_runner*
+<<<<<<< HEAD
+=======
+.coveralls.yml
+.coverage
+eqcorrscan/doc/_build
+eqcorrscan/doc/submodules/autogen
+station.dat
+*L.S??????
+*R.S??????
+.idea
+>>>>>>> upstream/master

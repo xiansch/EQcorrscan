@@ -1,6 +1,7 @@
 """
 Utility code for most of the plots used as part of the EQcorrscan package.
 
+<<<<<<< HEAD
 Copyright 2015 Calum Chamberlain
 
 This file is part of EQcorrscan.
@@ -18,12 +19,21 @@ This file is part of EQcorrscan.
     You should have received a copy of the GNU General Public License
     along with EQcorrscan.  If not, see <http://www.gnu.org/licenses/>.
 
+=======
+:copyright:
+    Calum Chamberlain, Chet Hopp.
+
+:license:
+    GNU Lesser General Public License, Version 3
+    (https://www.gnu.org/copyleft/lesser.html)
+>>>>>>> upstream/master
 """
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 import numpy as np
+<<<<<<< HEAD
 import scipy
 from scipy.stats import norm
 from numpy import linspace
@@ -32,6 +42,11 @@ import matplotlib as mpl
 mpl.use('pdf')
 import matplotlib.pylab as plt
 
+=======
+import matplotlib.pylab as plt
+
+
+>>>>>>> upstream/master
 def _check_save_args(save, savefile):
     if save and not savefile:
         raise IOError('save is set to True, but no savefile is given')
@@ -40,11 +55,21 @@ def _check_save_args(save, savefile):
 
 
 def chunk_data(tr, samp_rate, state='mean'):
+<<<<<<< HEAD
     r"""Function to downsample data for plotting by computing the maximum of \
     data within chunks, useful for plotting waveforms or cccsums, large \
     datasets that would otherwise exceed the complexity allowed, and overflow.
 
     :type tr: obspy.Trace
+=======
+    r"""Downsample data for plotting.
+
+    Computes the maximum of data within chunks, useful for plotting waveforms \
+    or cccsums, large datasets that would otherwise exceed the complexity \
+    allowed, and overflow.
+
+    :type tr: obspy.core.trace.Trace
+>>>>>>> upstream/master
     :param tr: Trace to be chunked
     :type samp_rate: float
     :param samp_rate: Desired sampling rate in Hz
@@ -64,8 +89,13 @@ def chunk_data(tr, samp_rate, state='mean'):
     # chunksize isn't an even divisor of the total size.
     # (This part won't use _any_ additional memory)
     numchunks = int(y.size // chunksize)
+<<<<<<< HEAD
     ychunks = y[:chunksize*numchunks].reshape((-1, chunksize))
     xchunks = x[:chunksize*numchunks].reshape((-1, chunksize))
+=======
+    ychunks = y[:chunksize * numchunks].reshape((-1, chunksize))
+    xchunks = x[:chunksize * numchunks].reshape((-1, chunksize))
+>>>>>>> upstream/master
 
     # Calculate the max, min, and means of chunksize-element chunks...
     if state == 'Max':
@@ -81,13 +111,18 @@ def chunk_data(tr, samp_rate, state='mean'):
                             axis=0)
         stack = np.vstack([max_env, min_env]).T
         trout.data = np.array([stack[i][indeces[i]]
+<<<<<<< HEAD
                               for i in xrange(len(stack))])
+=======
+                              for i in range(len(stack))])
+>>>>>>> upstream/master
     xcenters = xchunks.mean(axis=1)
     trout.stats.starttime = tr.stats.starttime + xcenters[0] /\
         tr.stats.sampling_rate
     trout.stats.sampling_rate = samp_rate
     return trout
 
+<<<<<<< HEAD
 def dist_overlay(cccsum_hist, r_cccsum_hist, rawthresh, save=False, savefile=None):
 	r"""Plot the histograms of the templates and reversed templates,\
 			overlaid with each other"""
@@ -123,12 +158,19 @@ def triple_plot(cccsum, cccsum_hist, trace, threshold, save=False,
     r"""Main function to make a triple plot with a day-long seismogram, \
     day-long correlation sum trace and histogram of the correlation sum to \
     show normality.
+=======
+
+def triple_plot(cccsum, cccsum_hist, trace, threshold, save=False,
+                savefile=None):
+    r"""Plot a day-long seismogram, correlogram and histogram.
+>>>>>>> upstream/master
 
     :type cccsum: numpy.ndarray
     :param cccsum: Array of the cross-channel cross-correlation sum
     :type cccsum_hist: numpy.ndarray
     :param cccsum_hist: cccsum for histogram plotting, can be the same as \
         cccsum but included if cccsum is just an envelope.
+<<<<<<< HEAD
     :type trace: obspy.Trace
     :param trace: A sample trace from the same time as cccsum
     :type threshold: float
@@ -137,11 +179,27 @@ def triple_plot(cccsum, cccsum_hist, trace, threshold, save=False,
     :param save: If True will save and not plot to screen, vice-versa if False
     :type savefile: str, optional
     :param savefile: Path to save figure to, only required if save=True
+=======
+    :type trace: obspy.core.trace.Trace
+    :param trace: A sample trace from the same time as cccsum
+    :type threshold: float
+    :param threshold: Detection threshold within cccsum
+    :type save: bool
+    :param save: If True will save and not plot to screen, vice-versa if False
+    :type savefile: str
+    :param savefile: Path to save figure to, only required if save=True
+
+    :returns: matplotlib.figure
+>>>>>>> upstream/master
     """
     _check_save_args(save, savefile)
     if len(cccsum) != len(trace.data):
         print('cccsum is: ' +
+<<<<<<< HEAD
               str(len(cccsum))+' trace is: '+str(len(trace.data)))
+=======
+              str(len(cccsum)) + ' trace is: ' + str(len(trace.data)))
+>>>>>>> upstream/master
         msg = ' '.join(['cccsum and trace must have the',
                         'same number of data points'])
         raise ValueError(msg)
@@ -163,7 +221,11 @@ def triple_plot(cccsum, cccsum_hist, trace, threshold, save=False,
     ax2.plot(t, cccsum, 'k')
     ax2.axis('tight')
     ax2.set_ylim([-1.7 * threshold, 1.7 * threshold])
+<<<<<<< HEAD
     ax2.set_xlabel("Time after %s [hr] with threshold=%.2f" % (trace.stats.starttime.isoformat(), threshold))
+=======
+    ax2.set_xlabel("Time after %s [hr]" % trace.stats.starttime.isoformat())
+>>>>>>> upstream/master
     # ax2.legend()
     # Generate a small subplot for the histogram of the cccsum data
     ax3 = plt.subplot2grid((2, 5), (1, 4), sharey=ax2)
@@ -178,11 +240,17 @@ def triple_plot(cccsum, cccsum_hist, trace, threshold, save=False,
         plt.close()
     else:
         plt.savefig(savefile)
+<<<<<<< HEAD
     return
+=======
+        plt.close()
+    return fig
+>>>>>>> upstream/master
 
 
 def peaks_plot(data, starttime, samp_rate, save=False, peaks=[(0, 0)],
                savefile=None):
+<<<<<<< HEAD
     r"""Simple utility code to plot the correlation peaks to check that the \
     peak finding routine is running correctly, used in debugging for the \
     EQcorrscan module.
@@ -199,6 +267,55 @@ def peaks_plot(data, starttime, samp_rate, save=False, peaks=[(0, 0)],
     :param peaks: List of peak locations and amplitudes (loc, amp)
     :type savefile: String, optional
     :param savefile: Path to save to, only used if save=True
+=======
+    r"""Plot peaks to check that the peak finding routine is running correctly.
+
+    Used in debugging for the EQcorrscan module.
+
+    :type data: numpy.array
+    :param data: Numpy array of the data within which peaks have been found
+    :type starttime: obspy.core.utcdatetime.UTCDateTime
+    :param starttime: Start time for the data
+    :type samp_rate: float
+    :param samp_rate: Sampling rate of data in Hz
+    :type save: bool
+    :param save: Save figure or plot to screen.
+    :type peaks: list
+    :param peaks: List of tuples of peak locations and amplitudes (loc, amp)
+    :type savefile: str
+    :param savefile: Path to save to, only used if save=True
+
+    :returns: matplotlib.figure
+
+    .. rubric:: Example
+
+    >>> import numpy as np
+    >>> from eqcorrscan.utils import findpeaks
+    >>> from eqcorrscan.utils.plotting import peaks_plot
+    >>> from obspy import UTCDateTime
+    >>> data = np.random.randn(200)
+    >>> data[30]=100
+    >>> data[60]=40
+    >>> threshold = 10
+    >>> peaks = findpeaks.find_peaks2_short(data, threshold, 3)
+    >>> peaks_plot(data=data, starttime=UTCDateTime("2008001"),
+    ...            samp_rate=10, peaks=peaks)  # doctest: +SKIP
+
+    .. plot::
+
+        import matplotlib.pyplot as plt
+        import numpy as np
+        from eqcorrscan.utils import findpeaks
+        from eqcorrscan.utils.plotting import peaks_plot
+        from obspy import UTCDateTime
+        data = np.random.randn(200)
+        data[30]=100
+        data[60]=40
+        threshold = 10
+        peaks = findpeaks.find_peaks2_short(data, threshold, 3)
+        peaks_plot(data=data, starttime=UTCDateTime("2008001"),
+                   samp_rate=10, peaks=peaks)
+>>>>>>> upstream/master
     """
     _check_save_args(save, savefile)
     npts = len(data)
@@ -216,6 +333,7 @@ def peaks_plot(data, starttime, samp_rate, save=False, peaks=[(0, 0)],
     fig.suptitle('Peaks')
     if not save:
         plt.show()
+<<<<<<< HEAD
         plt.close()
     else:
         plt.savefig(savefile)
@@ -224,24 +342,84 @@ def peaks_plot(data, starttime, samp_rate, save=False, peaks=[(0, 0)],
 
 def cumulative_detections(dates, template_names, save=False, savefile=None):
     r"""Simple plotting function to take a list of datetime objects and plot \
+=======
+    else:
+        plt.savefig(savefile)
+        plt.close()
+    return fig
+
+
+def cumulative_detections(dates, template_names, show=True, plot_legend=True,
+                          save=False, savefile=None):
+    r"""Plot cumulative detections in time.
+
+    Simple plotting function to take a list of datetime objects and plot \
+>>>>>>> upstream/master
     a cumulative detections list.  Can take dates as a list of lists and will \
     plot each list seperately, e.g. if you have dates from more than one \
     template it will overlay them in different colours.
 
+<<<<<<< HEAD
     :type dates: list of lists of datetime.datetime
     :param dates: Must be a list of lists of datetime.datetime objects
     :type template_names: list of strings
     :param template_names: List of the template names in order of the dates
+=======
+    :type dates: list
+    :param dates: Must be a list of lists of datetime.datetime objects
+    :type template_names: list
+    :param template_names: List of the template names in order of the dates
+    :type show: bool
+    :param show: Whether or not to show the plot, defaults to True.
+    :type plot_legend: bool
+    :param plot_legend: Specify whether to plot legend of template names. \
+        Defaults to True.
+>>>>>>> upstream/master
     :type save: bool
     :param save: Save figure or show to screen, optional
     :type savefile: str
     :param savefile: String to save to, required is save=True
+<<<<<<< HEAD
     """
+=======
+
+    :returns: :class: matplotlib.figure
+
+    .. rubric:: Example
+
+    >>> import datetime as dt
+    >>> import numpy as np
+    >>> from eqcorrscan.utils.plotting import cumulative_detections
+    >>> dates = []
+    >>> for i in range(3):
+    ...     dates.append([dt.datetime(2012, 3, 26) + dt.timedelta(n)
+    ...                   for n in np.random.randn(100)])
+    >>> cumulative_detections(dates, ['a', 'b', 'c'],
+    ...                       show=True) # doctest: +SKIP
+
+    .. plot::
+
+        import datetime as dt
+        import numpy as np
+        from eqcorrscan.utils.plotting import cumulative_detections
+        dates = []
+        for i in range(3):
+            dates.append([dt.datetime(2012, 3, 26) + dt.timedelta(n)
+                          for n in np.random.randn(100)])
+        cumulative_detections(dates, ['a', 'b', 'c'], show=True)
+    """
+    import matplotlib.dates as mdates
+    from copy import deepcopy
+>>>>>>> upstream/master
     _check_save_args(save, savefile)
     # Set up a default series of parameters for lines
     colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black',
               'firebrick', 'purple', 'darkgoldenrod', 'gray']
+<<<<<<< HEAD
     linestyles = ['-', '-.',  '--',  ':']
+=======
+    linestyles = ['-', '-.', '--', ':']
+>>>>>>> upstream/master
     # Check that dates is a list of lists
     if type(dates[0]) != list:
         dates = [dates]
@@ -249,6 +427,7 @@ def cumulative_detections(dates, template_names, save=False, savefile=None):
     j = 0
     # This is an ugly way of looping through colours and linestyles, it would
     # be better with itertools functions...
+<<<<<<< HEAD
     plothandles = []
     for k, template_dates in enumerate(dates):
         template_dates.sort()
@@ -258,6 +437,19 @@ def cumulative_detections(dates, template_names, save=False, savefile=None):
                             color=colors[i], label=template_names[k],
                             linewidth=3.0)
         plothandles.append(filename)
+=======
+    fig, ax1 = plt.subplots()
+    min_date = min([min(_dates) for _dates in dates])
+    for k, template_dates in enumerate(dates):
+        template_dates.sort()
+        plot_dates = deepcopy(template_dates)
+        plot_dates.insert(0, min_date)
+        print(plot_dates)
+        counts = np.arange(-1, len(template_dates))
+        ax1.step(plot_dates, counts, linestyles[j],
+                 color=colors[i], label=template_names[k],
+                 linewidth=3.0)
+>>>>>>> upstream/master
         if i < len(colors) - 1:
             i += 1
         else:
@@ -266,6 +458,7 @@ def cumulative_detections(dates, template_names, save=False, savefile=None):
                 j += 1
             else:
                 j = 0
+<<<<<<< HEAD
     plt.xlabel('Date')
     plt.ylabel('Cumulative detections')
     plt.title('Cumulative detections for all templates')
@@ -282,12 +475,80 @@ def threeD_gridplot(nodes, save=False, savefile=None):
     r"""Function to plot in 3D a series of grid points.
 
     :type nodes: list of tuples
+=======
+    ax1.set_xlabel('Date')
+    ax1.set_ylabel('Cumulative detections')
+    plt.title('Cumulative detections for all templates')
+    # Set formatters for x-labels
+    mins = mdates.MinuteLocator()
+    max_date = dates[0][0]
+    min_date = max_date
+    for date_list in dates:
+        if max(date_list) > max_date:
+            max_date = max(date_list)
+        if min(date_list) < min_date:
+            min_date = min(date_list)
+    timedif = max_date - min_date
+    if timedif.total_seconds() >= 10800 and timedif.total_seconds() <= 25200:
+        print('Using quarter of an hour stamps')
+        hours = mdates.MinuteLocator(byminute=[0, 15, 30, 45])
+        mins = mdates.HourLocator(byminute=range(0, 60, 5))
+    elif timedif.total_seconds() <= 1200:
+        print('Using 2 min stamps')
+        hours = mdates.MinuteLocator(byminute=range(0, 60, 2))
+        mins = mdates.HourLocator(byminute=range(0, 60, 0.5))
+    elif timedif.total_seconds > 25200 and timedif.total_seconds() <= 86400:
+        print('Using hour stamps')
+        hours = mdates.HourLocator(byhour=range(0, 24, 3))
+        mins = mdates.HourLocator(byhour=range(0, 24, 1))
+    elif timedif.total_seconds > 86400 and timedif.total_seconds() <= 172800:
+        print('Using hour stamps')
+        hours = mdates.HourLocator(byhour=range(0, 24, 6))
+        mins = mdates.HourLocator(byhour=range(0, 24, 1))
+    elif timedif.total_seconds() > 172800:
+        print('Using day stamps')
+        hours = mdates.AutoDateLocator()
+        mins = mdates.HourLocator(byhour=range(0, 24, 3))
+    else:
+        print('Using 5 min stamps')
+        hours = mdates.MinuteLocator(byminute=range(0, 60, 5))
+    hrFMT = mdates.DateFormatter('%Y/%m/%d %H:%M:%S')
+    ax1.xaxis.set_major_locator(hours)
+    ax1.xaxis.set_major_formatter(hrFMT)
+    # Minor locator overruns maxticks for ~year-long datasets
+    if timedif.total_seconds() < 172800:
+        ax1.xaxis.set_minor_locator(mins)
+    plt.gcf().autofmt_xdate()
+    locs, labels = plt.xticks()
+    ax1.set_ylim([0, max([len(_dates) for _dates in dates])])
+    plt.setp(labels, rotation=15)
+    if plot_legend:
+        ax1.legend(loc=2, prop={'size': 8}, ncol=2)
+    if save:
+        fig.savefig(savefile)
+        plt.close()
+    else:
+        if show:
+            plt.show()
+    return fig
+
+
+def threeD_gridplot(nodes, save=False, savefile=None):
+    r"""Plot in a series of grid points in 3D.
+
+    :type nodes: list
+>>>>>>> upstream/master
     :param nodes: List of tuples of the form (lat, long, depth)
     :type save: bool
     :param save: if True will save without plotting to screen, if False \
         (default) will plot to screen but not save
     :type savefile: str
     :param savefile: required if save=True, path to save figure to.
+<<<<<<< HEAD
+=======
+
+    :returns: :class: matplotlib.figure
+>>>>>>> upstream/master
     """
     _check_save_args(save, savefile)
     lats = []
@@ -307,6 +568,7 @@ def threeD_gridplot(nodes, save=False, savefile=None):
     ax.get_yaxis().get_major_formatter().set_scientific(False)
     if not save:
         plt.show()
+<<<<<<< HEAD
         plt.close()
     else:
         plt.savefig(savefile)
@@ -326,6 +588,36 @@ def multi_event_singlechan(streams, catalog, clip=10.0, pre_pick=2.0,
         you plan on plotting
     :type catalog: obspy.core.event.Catalog
     :param catalog: Catalog of events, one for each trace, with a single pick
+=======
+    else:
+        plt.savefig(savefile)
+        plt.close()
+    return fig
+
+
+def multi_event_singlechan(streams, catalog, station, channel,
+                           clip=10.0, pre_pick=2.0,
+                           freqmin=False, freqmax=False, realign=False,
+                           cut=(-3.0, 5.0), PWS=False, title=False,
+                           save=False, savefile=None):
+    r"""Plot data from a single channel for multiple events.
+
+    Data will be aligned by their pick-time given in the \
+    picks.  Requires an individual stream for each event you want to plot,
+    events are stored in the catalog object, and there must be picks present
+    for the streams you wish to plot.  Events will be aligned if `realign=True`,
+    in this case the traces will be aligned using the window defined by `cut`.
+
+    :type streams: list
+    :param streams: List of the streams to use, can contain more traces than \
+        you plan on plotting - must be in the same order as events in catalog.
+    :type catalog: obspy.core.event.Catalog
+    :param catalog: Catalog of events, one for each stream.
+    :type station: str
+    :param station: Station to plot.
+    :type channel: str
+    :param channel: Channel to plot.
+>>>>>>> upstream/master
     :type clip: float
     :param clip: Length in seconds to plot, defaults to 10.0
     :type pre_pick: float
@@ -336,9 +628,17 @@ def multi_event_singlechan(streams, catalog, clip=10.0, pre_pick=2.0,
     :type freqmax: float
     :param freqmax: High cut for bandpass in Hz
     :type realign: bool
+<<<<<<< HEAD
     :param realign: To compute best alignement based on correlation or not.
     :type cut: tuple
     :param cut: tuple of start and end times for cut in seconds from the pick
+=======
+    :param realign: To compute best alignment based on correlation or not.
+    :type cut: tuple
+    :param cut: tuple of start and end times for cut in seconds from the \
+        pick, used for alignment.  Will only use this window to align the \
+        traces.
+>>>>>>> upstream/master
     :type PWS: bool
     :param PWS: compute Phase Weighted Stack, if False, will compute linear \
         stack.
@@ -350,7 +650,14 @@ def multi_event_singlechan(streams, catalog, clip=10.0, pre_pick=2.0,
     :type savefile: str
     :param savefile: Filename to save to, required for save=True
 
+<<<<<<< HEAD
     :returns: Alligned and cut traces, and new picks
+=======
+    :returns: Aligned and cut traces
+    :returns: new picks
+    :rtype: list
+    :returns: matplotlib.figure
+>>>>>>> upstream/master
     """
     _check_save_args(save, savefile)
     from eqcorrscan.utils import stacking
@@ -358,12 +665,20 @@ def multi_event_singlechan(streams, catalog, clip=10.0, pre_pick=2.0,
     from eqcorrscan.core.match_filter import normxcorr2
     from obspy import Stream
     import warnings
+<<<<<<< HEAD
     fig, axes = plt.subplots(len(catalog)+1, 1, sharex=True, figsize=(7, 12))
     axes = axes.ravel()
+=======
+
+    fig, axes = plt.subplots(len(catalog) + 1, 1, sharex=True, figsize=(7, 12))
+    if len(catalog) > 1:
+        axes = axes.ravel()
+>>>>>>> upstream/master
     traces = []
     al_traces = []
     # Keep input safe
     clist = copy.deepcopy(catalog)
+<<<<<<< HEAD
     st_list = copy.deepcopy(streams)
     for i, event in enumerate(clist):
         if st_list[i].select(station=event.picks[0].waveform_id.station_code,
@@ -376,33 +691,66 @@ def multi_event_singlechan(streams, catalog, clip=10.0, pre_pick=2.0,
                                    channel_code[-1])[0]
         else:
             print('No data for '+event.pick[0].waveform_id)
+=======
+    if isinstance(streams, Stream):
+        streams = [streams]
+    st_list = copy.deepcopy(streams)
+    for i, event in enumerate(clist):
+        # Extract the appropriate pick
+        _pick = [pick for pick in event.picks if
+                 pick.waveform_id.station_code == station and
+                 pick.waveform_id.channel_code == channel][0]
+        if st_list[i].select(station=station, channel=channel):
+            tr = st_list[i].select(station=station, channel=channel)[0]
+        else:
+            print('No data for ' + _pick.waveform_id)
+>>>>>>> upstream/master
             continue
         tr.detrend('linear')
         if freqmin:
             tr.filter('bandpass', freqmin=freqmin, freqmax=freqmax)
         if realign:
             tr_cut = tr.copy()
+<<<<<<< HEAD
             tr_cut.trim(event.picks[0].time + cut[0],
                         event.picks[0].time + cut[1],
+=======
+            tr_cut.trim(_pick.time + cut[0],
+                        _pick.time + cut[1],
+>>>>>>> upstream/master
                         nearest_sample=False)
             if len(tr_cut.data) <= (0.5 * (cut[1] - cut[0]) *
                                     tr_cut.stats.sampling_rate):
                 msg = ''.join(['Not enough in the trace for ',
                                tr.stats.station,
                                '.', tr.stats.channel, '\n',
+<<<<<<< HEAD
                                'Suggest removing pick from sfile at time ',
                                str(event.picks[0].time)])
+=======
+                               'Suggest removing pick from event at time ',
+                               str(_pick.time)])
+>>>>>>> upstream/master
                 warnings.warn(msg)
             else:
                 al_traces.append(tr_cut)
         else:
+<<<<<<< HEAD
             tr.trim(event.picks[0].time - pre_pick,
                     event.picks[0].time + clip - pre_pick,
+=======
+            tr.trim(_pick.time - pre_pick,
+                    _pick.time + clip - pre_pick,
+>>>>>>> upstream/master
                     nearest_sample=False)
         if len(tr.data) == 0:
             msg = ''.join(['No data in the trace for ', tr.stats.station,
                            '.', tr.stats.channel, '\n',
+<<<<<<< HEAD
                            'Suggest removing pick from sfile at time ',
+=======
+                           'Suggest removing pick from event at time ',
+>>>>>>> upstream/master
                            str(event.picks[0].time)])
             warnings.warn(msg)
             continue
@@ -412,10 +760,17 @@ def multi_event_singlechan(streams, catalog, clip=10.0, pre_pick=2.0,
                         al_traces[0].stats.sampling_rate)
         shifts = stacking.align_traces(al_traces, shift_len)
         for i in xrange(len(shifts)):
+<<<<<<< HEAD
             print('Shifting by '+str(shifts[i])+' seconds')
             event.picks[0].time -= shifts[i]
             traces[i].trim(event.picks[0].time - pre_pick,
                            event.picks[0].time + clip-pre_pick,
+=======
+            print('Shifting by ' + str(shifts[i]) + ' seconds')
+            event.picks[0].time -= shifts[i]
+            traces[i].trim(_pick.time - pre_pick,
+                           _pick.time + clip - pre_pick,
+>>>>>>> upstream/master
                            nearest_sample=False)
     # We now have a list of traces
     traces = [(trace, trace.stats.starttime.datetime) for trace in traces]
@@ -426,16 +781,25 @@ def multi_event_singlechan(streams, catalog, clip=10.0, pre_pick=2.0,
         y = tr.data
         x = np.arange(len(y))
         x = x / tr.stats.sampling_rate  # convert to seconds
+<<<<<<< HEAD
         axes[i+1].plot(x, y, 'k', linewidth=1.1)
         axes[i+1].yaxis.set_ticks([])
+=======
+        axes[i + 1].plot(x, y, 'k', linewidth=1.1)
+        axes[i + 1].yaxis.set_ticks([])
+>>>>>>> upstream/master
     traces = [Stream(trace) for trace in traces]
     if PWS:
         linstack = stacking.PWS_stack(traces)
     else:
         linstack = stacking.linstack(traces)
+<<<<<<< HEAD
     tr = linstack.select(station=event[0].picks[0].waveform_id.station_code,
                          channel='*' +
                          event[0].picks[0].waveform_id.channel_code[-1])[0]
+=======
+    tr = linstack.select(station=station, channel=channel)[0]
+>>>>>>> upstream/master
     y = tr.data
     x = np.arange(len(y))
     x = x / tr.stats.sampling_rate
@@ -444,6 +808,7 @@ def multi_event_singlechan(streams, catalog, clip=10.0, pre_pick=2.0,
     axes[0].yaxis.set_ticks([])
     for i, slave in enumerate(traces):
         cc = normxcorr2(tr.data, slave[0].data)
+<<<<<<< HEAD
         axes[i+1].set_ylabel('cc='+str(round(np.max(cc), 2)), rotation=0)
         axes[i+1].text(0.9, 0.15, str(round(np.max(slave[0].data))),
                        bbox=dict(facecolor='white', alpha=0.95),
@@ -452,6 +817,16 @@ def multi_event_singlechan(streams, catalog, clip=10.0, pre_pick=2.0,
                        strftime('%Y/%m/%d %H:%M:%S'),
                        bbox=dict(facecolor='white', alpha=0.95),
                        transform=axes[i+1].transAxes)
+=======
+        axes[i + 1].set_ylabel('cc=' + str(round(np.max(cc), 2)), rotation=0)
+        axes[i + 1].text(0.9, 0.15, str(round(np.max(slave[0].data))),
+                         bbox=dict(facecolor='white', alpha=0.95),
+                         transform=axes[i + 1].transAxes)
+        axes[i + 1].text(0.7, 0.85, slave[0].stats.starttime.datetime.
+                         strftime('%Y/%m/%d %H:%M:%S'),
+                         bbox=dict(facecolor='white', alpha=0.95),
+                         transform=axes[i + 1].transAxes)
+>>>>>>> upstream/master
     axes[-1].set_xlabel('Time (s)')
     if title:
         axes[0].set_title(title)
@@ -460,6 +835,7 @@ def multi_event_singlechan(streams, catalog, clip=10.0, pre_pick=2.0,
         plt.show()
     else:
         plt.savefig(savefile)
+<<<<<<< HEAD
     return traces, clist
 
 def detection_multiplot(stream, template, times, streamcolour='k',
@@ -473,6 +849,21 @@ def detection_multiplot(stream, template, times, streamcolour='k',
     :type template: obspy.Stream
     :param template: Template to be plotted on top of the base stream (red)
     :type times: list of datetime.datetime
+=======
+        plt.close()
+    return traces, clist, fig
+
+
+def detection_multiplot(stream, template, times, streamcolour='k',
+                        templatecolour='r', save=False, savefile=None):
+    r"""Plot a stream of data with a template on top of it at detection times.
+
+    :type stream: obspy.core.stream.Stream
+    :param stream: Stream of data to be plotted as the base (black)
+    :type template: obspy.core.stream.Stream
+    :param template: Template to be plotted on top of the base stream (red)
+    :type times: list
+>>>>>>> upstream/master
     :param times: list of times of detections in the order of the channels in
                 template.
     :type streamcolour: str
@@ -484,6 +875,7 @@ def detection_multiplot(stream, template, times, streamcolour='k',
         to screen.
     :type savefile: str
     :param savefile: Filename to save to, required for save=True
+<<<<<<< HEAD
     """
     _check_save_args(save, savefile)
     import datetime as dt
@@ -492,12 +884,35 @@ def detection_multiplot(stream, template, times, streamcolour='k',
     axes = axes.ravel()
     mintime = min([tr.stats.starttime for tr in template])
     for i, template_tr in enumerate(template):
+=======
+
+    :returns: :class: matplotlib.figure
+    """
+    _check_save_args(save, savefile)
+    import datetime as dt
+    from obspy import UTCDateTime, Stream
+    # Sort before plotting
+    template = template.sort()
+    # Only take traces that match in both
+    template_stachans = [(tr.stats.station, tr.stats.channel) for tr in template]
+    stream = Stream([tr for tr in stream
+                     if (tr.stats.station, tr.stats.channel) in template_stachans])
+    ntraces = min(len(template), len(stream))
+    print('Only plotting %s traces' % str(ntraces))
+    fig, axes = plt.subplots(ntraces, 1, sharex=True)
+    if len(template) > 1:
+        axes = axes.ravel()
+    mintime = min([tr.stats.starttime for tr in template])
+    i = 0
+    for template_tr in template:
+>>>>>>> upstream/master
         image = stream.select(station=template_tr.stats.station,
                               channel='*'+template_tr.stats.channel[-1])
         if not image:
             msg = ' '.join(['No data for', template_tr.stats.station,
                             template_tr.stats.channel])
             print(msg)
+<<<<<<< HEAD
             print('the current template trace is ' + str(i))
 	    continue
         image = image.merge()[0]
@@ -505,6 +920,13 @@ def detection_multiplot(stream, template, times, streamcolour='k',
         if image.stats.sampling_rate > 20:
             image.decimate(int(image.stats.sampling_rate // 20))
         if template_tr.stats.sampling_rate > 20:
+=======
+            continue
+        image = image.merge()[0]
+        # Downsample if needed
+        if image.stats.sampling_rate > 20 and image.stats.npts > 10000:
+            image.decimate(int(image.stats.sampling_rate // 20))
+>>>>>>> upstream/master
             template_tr.decimate(int(template_tr.stats.sampling_rate // 20))
         # Get a list of datetime objects
         image_times = [image.stats.starttime.datetime +
@@ -523,25 +945,43 @@ def detection_multiplot(stream, template, times, streamcolour='k',
             axes[i].plot(template_times,
                          template_tr.data / max(template_tr.data),
                          templatecolour, linewidth=1.2)
+<<<<<<< HEAD
 	   # axes[i+1].text(0.9, 0.15, str(round(np.max(template_tr.data))),
                        bbox=dict(facecolor='white', alpha=0.95),
                        transform=axes[i+1].transAxes)
+=======
+>>>>>>> upstream/master
         ylab = '.'.join([template_tr.stats.station,
                          template_tr.stats.channel])
         axes[i].set_ylabel(ylab, rotation=0,
                            horizontalalignment='right')
+<<<<<<< HEAD
         axes[i].set_yticks([])
+=======
+        axes[i].yaxis.set_ticks([])
+        i += 1
+>>>>>>> upstream/master
     axes[len(axes) - 1].set_xlabel('Time')
     plt.subplots_adjust(hspace=0, left=0.175, right=0.95, bottom=0.07)
     if not save:
         plt.show()
     else:
         plt.savefig(savefile)
+<<<<<<< HEAD
     return
 
 
 def interev_mag_sfiles(sfiles, save=False, savefile=None):
     r"""Function to plot interevent-time versus magnitude for series of events.
+=======
+        plt.close()
+    return fig
+
+
+def interev_mag_sfiles(sfiles, save=False, savefile=None):
+    r"""Plot inter-event time versus magnitude for series of events.
+
+>>>>>>> upstream/master
     **thin** Wrapper for interev_mag.
 
     :type sfiles: list
@@ -551,6 +991,11 @@ def interev_mag_sfiles(sfiles, save=False, savefile=None):
         to screen.
     :type savefile: str
     :param savefile: Filename to save to, required for save=True
+<<<<<<< HEAD
+=======
+
+    :returns: :class: matplotlib.figure
+>>>>>>> upstream/master
     """
     _check_save_args(save, savefile)
     from eqcorrscan.utils import sfile_util
@@ -558,6 +1003,7 @@ def interev_mag_sfiles(sfiles, save=False, savefile=None):
              for sfile in sfiles]
     mags = [sfile_util.readheader(sfile)[0].magnitudes[0].mag
             for sfile in sfiles]
+<<<<<<< HEAD
     interev_mag(times, mags, save, savefile)
 
 
@@ -568,12 +1014,55 @@ def interev_mag(times, mags, save=False, savefile=None):
     :type times: list of datetime
     :param times: list of the detection times, must be sorted the same as mags
     :type mags: list of float
+=======
+    fig = interev_mag(times, mags, save, savefile)
+    return fig
+
+
+def interev_mag(times, mags, save=False, savefile=None):
+    r"""Plot inter-event times against magnitude.
+
+    :type times: list
+    :param times: list of the detection times, must be sorted the same as mags
+    :type mags: list
+>>>>>>> upstream/master
     :param mags: list of magnitudes
     :type save: bool
     :param save: False will plot to screen, true will save plot and not show \
         to screen.
     :type savefile: str
     :param savefile: Filename to save to, required for save=True
+<<<<<<< HEAD
+=======
+
+    :returns: :class: matplotlib.figure
+
+    .. rubric:: Example
+
+    >>> from obspy.clients.fdsn import Client
+    >>> from obspy import UTCDateTime
+    >>> from eqcorrscan.utils.plotting import interev_mag
+    >>> client = Client('IRIS')
+    >>> t1 = UTCDateTime('2012-03-26T00:00:00')
+    >>> t2 = t1 + (3 * 86400)
+    >>> catalog = client.get_events(starttime=t1, endtime=t2, minmagnitude=3)
+    >>> magnitudes = [event.preferred_magnitude().mag for event in catalog]
+    >>> times = [event.preferred_origin().time for event in catalog]
+    >>> interev_mag(times, magnitudes) # doctest: +SKIP
+
+    .. plot::
+
+        from obspy.clients.fdsn import Client
+        from obspy import UTCDateTime
+        from eqcorrscan.utils.plotting import interev_mag
+        client = Client('IRIS')
+        t1 = UTCDateTime('2012-03-26T00:00:00')
+        t2 = t1 + (3 * 86400)
+        catalog = client.get_events(starttime=t1, endtime=t2, minmagnitude=3)
+        magnitudes = [event.preferred_magnitude().mag for event in catalog]
+        times = [event.preferred_origin().time for event in catalog]
+        interev_mag(times, magnitudes)
+>>>>>>> upstream/master
     """
     _check_save_args(save, savefile)
     l = [(times[i], mags[i]) for i in xrange(len(times))]
@@ -603,6 +1092,7 @@ def interev_mag(times, mags, save=False, savefile=None):
         plt.show()
     else:
         plt.savefig(savefile)
+<<<<<<< HEAD
 
 
 def obspy_3d_plot(inventory, catalog, save=False, savefile=None):
@@ -612,12 +1102,29 @@ def obspy_3d_plot(inventory, catalog, save=False, savefile=None):
     :type inventory: obspy.Inventory
     :param inventory: Obspy inventory class containing station metadata
     :type catalog: obspy.Catalog
+=======
+        plt.close()
+    return fig
+
+
+def obspy_3d_plot(inventory, catalog, save=False, savefile=None):
+    r"""Plot obspy.Inventory and obspy.Catalog classes in three dimensions.
+
+    :type inventory: obspy.core.inventory.inventory.Inventory
+    :param inventory: Obspy inventory class containing station metadata
+    :type catalog: obspy.core.event.catalog.Catalog
+>>>>>>> upstream/master
     :param catalog: Obspy catalog class containing event metadata
     :type save: bool
     :param save: False will plot to screen, true will save plot and not show \
         to screen.
     :type savefile: str
     :param savefile: Filename to save to, required for save=True
+<<<<<<< HEAD
+=======
+
+    :returns: :class: matplotlib.figure
+>>>>>>> upstream/master
     """
     _check_save_args(save, savefile)
     from eqcorrscan.utils.plotting import threeD_seismplot
@@ -631,6 +1138,7 @@ def obspy_3d_plot(inventory, catalog, save=False, savefile=None):
                      sta.elevation / 1000 - sta.channels[0].depth / 1000)
                     for sta in net]
         all_stas += stations
+<<<<<<< HEAD
     threeD_seismplot(all_stas, nodes, save, savefile)
     return
 
@@ -643,6 +1151,21 @@ def threeD_seismplot(stations, nodes, save=False, savefile=None):
     :param stations: list of one tuple per station of (lat, long, elevation), \
         with up positive.
     :type nodes: list of tuple
+=======
+    fig = threeD_seismplot(all_stas, nodes, save, savefile)
+    return fig
+
+
+def threeD_seismplot(stations, nodes, save=False, savefile=None):
+    r"""Plot seismicity and stations in a 3D, movable, zoomable space.
+
+    Uses matplotlibs Axes3D package.
+
+    :type stations: list
+    :param stations: list of one tuple per station of (lat, long, elevation), \
+        with up positive.
+    :type nodes: list
+>>>>>>> upstream/master
     :param nodes: list of one tuple per event of (lat, long, depth) with down \
         positive.
     :type save: bool
@@ -650,6 +1173,11 @@ def threeD_seismplot(stations, nodes, save=False, savefile=None):
         to screen.
     :type savefile: str
     :param savefile: Filename to save to, required for save=True
+<<<<<<< HEAD
+=======
+
+    :returns: :class: matplotlib.figure
+>>>>>>> upstream/master
     """
     _check_save_args(save, savefile)
     stalats, stalongs, staelevs = zip(*stations)
@@ -668,6 +1196,7 @@ def threeD_seismplot(stations, nodes, save=False, savefile=None):
         plt.show()
     else:
         plt.savefig(savefile)
+<<<<<<< HEAD
     return
 
 
@@ -678,6 +1207,21 @@ def pretty_template_plot(template, size=(18.5, 10.5), save=False,
     better than the default obspy plotting routine for short data lengths.
 
     :type template: :class: obspy.Stream
+=======
+        plt.close()
+    return fig
+
+
+def pretty_template_plot(template, size=(10.5, 7.5), save=False,
+                         savefile=None, title=False, background=False,
+                         picks=False):
+    r"""Plot of a single template possibly within background data.
+
+    Designed to work better than the default obspy plotting routine for \
+    short data lengths.
+
+    :type template: :class: obspy.core.stream.Stream
+>>>>>>> upstream/master
     :param template: Template stream to plot
     :type size: tuple
     :param size: tuple of plot size
@@ -687,10 +1231,59 @@ def pretty_template_plot(template, size=(18.5, 10.5), save=False,
     :param savefile: String to save plot as, required if save=True.
     :type title: bool
     :param title: String if set will be the plot title
+<<<<<<< HEAD
     :type background: :class: obspy.stream
     :param background: Stream to plot the template within.
     :type picks: list of obspy.core.event.pick
     :param picks: List of obspy type picks.
+=======
+    :type background: :class: obspy.core.stream.stream
+    :param background: Stream to plot the template within.
+    :type picks: list
+    :param picks: List of obspy type picks.
+
+    :returns: :class: matplotlib.figure
+
+    .. rubric:: Example
+
+    >>> from obspy import read
+    >>> from eqcorrscan.core import template_gen
+    >>> from eqcorrscan.utils.plotting import pretty_template_plot
+    >>> from eqcorrscan.utils import sfile_util
+    >>>
+    >>> test_file = 'eqcorrscan/tests/test_data/REA/TEST_/01-0411-15L.S201309'
+    >>> test_wavefile = 'eqcorrscan/tests/test_data/WAV/TEST_/' +\
+    ...     '2013-09-01-0410-35.DFDPC_024_00'
+    >>> event = sfile_util.readpicks(test_file)
+    >>> st = read(test_wavefile)
+    >>> st = st.filter('bandpass', freqmin=2.0, freqmax=15.0)
+    >>> for tr in st:
+    ...     tr = tr.trim(tr.stats.starttime + 30, tr.stats.endtime - 30)
+    >>> template = template_gen._template_gen(event.picks, st, 2)
+    >>> pretty_template_plot(template, background=st,
+    ...                      picks=event.picks) # doctest: +SKIP
+
+    .. plot::
+
+        from obspy import read
+        from eqcorrscan.core import template_gen
+        from eqcorrscan.utils.plotting import pretty_template_plot
+        from eqcorrscan.utils import sfile_util
+        import os
+        test_file = os.path.realpath('../../..') + \
+            '/tests/test_data/REA/TEST_/01-0411-15L.S201309'
+        test_wavefile = os.path.realpath('../../..') +\
+            '/tests/test_data/WAV/TEST_/' +\
+            '2013-09-01-0410-35.DFDPC_024_00'
+        event = sfile_util.readpicks(test_file)
+        st = read(test_wavefile)
+        st.filter('bandpass', freqmin=2.0, freqmax=15.0)
+        for tr in st:
+            tr.trim(tr.stats.starttime + 30, tr.stats.endtime - 30)
+        template = template_gen._template_gen(event.picks, st, 2)
+        pretty_template_plot(template, background=st,
+                             picks=event.picks)
+>>>>>>> upstream/master
     """
     _check_save_args(save, savefile)
     fig, axes = plt.subplots(len(template), 1, sharex=True, figsize=size)
@@ -712,14 +1305,22 @@ def pretty_template_plot(template, size=(18.5, 10.5), save=False,
             axis = axes
         delay = tr.stats.starttime - mintime
         y = tr.data
+<<<<<<< HEAD
         x = np.linspace(0, (len(y)-1) * tr.stats.delta, len(y))
+=======
+        x = np.linspace(0, (len(y) - 1) * tr.stats.delta, len(y))
+>>>>>>> upstream/master
         x += delay
         if background:
             btr = background.select(station=tr.stats.station,
                                     channel=tr.stats.channel)[0]
             bdelay = btr.stats.starttime - mintime
             by = btr.data
+<<<<<<< HEAD
             bx = np.linspace(0, (len(by)-1) * btr.stats.delta, len(by))
+=======
+            bx = np.linspace(0, (len(by) - 1) * btr.stats.delta, len(by))
+>>>>>>> upstream/master
             bx += bdelay
             axis.plot(bx, by, 'k', linewidth=1)
             template_line, = axis.plot(x, y, 'r', linewidth=1.1,
@@ -737,7 +1338,11 @@ def pretty_template_plot(template, size=(18.5, 10.5), save=False,
             lengths.append(x[-1])
         # print(' '.join([tr.stats.station, str(len(x)), str(len(y))]))
         axis.set_ylabel('.'.join([tr.stats.station, tr.stats.channel]),
+<<<<<<< HEAD
                            rotation=0, horizontalalignment='right')
+=======
+                        rotation=0, horizontalalignment='right')
+>>>>>>> upstream/master
         axis.yaxis.set_ticks([])
         # Plot the picks if they are given
         if picks:
@@ -782,13 +1387,21 @@ def pretty_template_plot(template, size=(18.5, 10.5), save=False,
     plt.subplots_adjust(hspace=0)
     if not save:
         plt.show()
+<<<<<<< HEAD
         plt.close()
     else:
         plt.savefig(savefile)
+=======
+    else:
+        plt.savefig(savefile)
+        plt.close()
+    return fig
+>>>>>>> upstream/master
 
 
 def NR_plot(stream, NR_stream, detections, false_detections=False,
             size=(18.5, 10), save=False, savefile=None, title=False):
+<<<<<<< HEAD
     r"""Function to plot the Network response alongside the streams used -\
     highlights detection times in the network response.
 
@@ -799,6 +1412,19 @@ def NR_plot(stream, NR_stream, detections, false_detections=False,
     :type detections: list of datetime objects
     :param detections: List of the detections
     :type false_detections: list of datetime
+=======
+    r"""Plot Network response alongside the streams used.
+
+    Highlights detection times in the network response.
+
+    :type stream: :class: obspy.core.stream.Stream
+    :param stream: Stream to plot
+    :type NR_stream: :class: obspy.core.stream.Stream
+    :param NR_stream: Stream for the network response
+    :type detections: list
+    :param detections: List of the detections
+    :type false_detections: list
+>>>>>>> upstream/master
     :param false_detections: Either False (default) or list of false detection\
      times
     :type size: tuple
@@ -808,6 +1434,11 @@ def NR_plot(stream, NR_stream, detections, false_detections=False,
         of save path.
     :type title: str
     :param title: String for the title of the plot, set to False
+<<<<<<< HEAD
+=======
+
+    :returns: :class: matplotlib.figure
+>>>>>>> upstream/master
     """
     _check_save_args(save, savefile)
     import datetime as dt
@@ -878,14 +1509,22 @@ def NR_plot(stream, NR_stream, detections, false_detections=False,
         axes[0].set_title(title)
     if not save:
         plt.show()
+<<<<<<< HEAD
         plt.close()
     else:
         plt.savefig(savefile)
     return
+=======
+    else:
+        plt.savefig(savefile)
+        plt.close()
+    return fig
+>>>>>>> upstream/master
 
 
 def SVD_plot(SVStreams, SValues, stachans, title=False, save=False,
              savefile=None):
+<<<<<<< HEAD
     r"""Function to plot the singular vectors from the clustering routines, one\
     plot for each stachan
 
@@ -894,6 +1533,18 @@ def SVD_plot(SVStreams, SValues, stachans, title=False, save=False,
             ordered by power, e.g. first singular vector in the first stream
     :type SValues: list of float
     :param SValues: List of the singular values corresponding to the SVStreams
+=======
+    r"""Plot singular vectors from the clustering routines.
+
+    One plot for each stachan.
+
+    :type SVStreams: list
+    :param SVStreams: See clustering.SVD_2_Stream - will assume these are\
+            ordered by power, e.g. first singular vector in the first stream
+    :type SValues: list
+    :param SValues: List of floats of the singular values corresponding to \
+        the SVStreams
+>>>>>>> upstream/master
     :type stachans: list
     :param stachans: List of station.channel
     :type save: bool
@@ -902,6 +1553,11 @@ def SVD_plot(SVStreams, SValues, stachans, title=False, save=False,
     :type savefile: str
     :param savefile: Filename to save to, required for save=True, will label \
         additionally according to station and channel.
+<<<<<<< HEAD
+=======
+
+    :returns: :class: matplotlib.figure
+>>>>>>> upstream/master
     """
     _check_save_args(save, savefile)
     for stachan in stachans:
@@ -910,7 +1566,12 @@ def SVD_plot(SVStreams, SValues, stachans, title=False, save=False,
                                        channel=stachan.split('.')[1])[0]
                        for SVStream in SVStreams]
         fig, axes = plt.subplots(len(plot_traces), 1, sharex=True)
+<<<<<<< HEAD
         axes = axes.ravel()
+=======
+        if len(plot_traces) > 1:
+            axes = axes.ravel()
+>>>>>>> upstream/master
         for i, tr in enumerate(plot_traces):
             y = tr.data
             x = np.linspace(0, len(y) * tr.stats.delta, len(y))
@@ -930,18 +1591,31 @@ def SVD_plot(SVStreams, SValues, stachans, title=False, save=False,
         else:
             plt.savefig(savefile.split('.') + '_stachan.' +
                         savefile.split('.')[-1])
+<<<<<<< HEAD
     return
+=======
+            plt.close()
+    return fig
+>>>>>>> upstream/master
 
 
 def plot_synth_real(real_template, synthetic, channels=False, save=False,
                     savefile=None):
     r"""Plot multiple channels of data for real data and synthetic.
 
+<<<<<<< HEAD
     :type real_template: obspy.Stream
     :param real_template: Stream of the real template
     :type synthetic: obspy.Stream
     :param synthetic: Stream of synthetic template
     :type channels: list of str
+=======
+    :type real_template: obspy.core.stream.Stream
+    :param real_template: Stream of the real template
+    :type synthetic: obspy.core.stream.Stream
+    :param synthetic: Stream of synthetic template
+    :type channels: list
+>>>>>>> upstream/master
     :param channels: List of tuples of (station, channel) to plot, default is\
             False, which plots all.
     :type save: bool
@@ -949,6 +1623,11 @@ def plot_synth_real(real_template, synthetic, channels=False, save=False,
         to screen.
     :type savefile: str
     :param savefile: Filename to save to, required for save=True
+<<<<<<< HEAD
+=======
+
+    :returns: :class: matplotlib.figure
+>>>>>>> upstream/master
     """
     _check_save_args(save, savefile)
     from obspy.signal.cross_correlation import xcorr
@@ -970,7 +1649,12 @@ def plot_synth_real(real_template, synthetic, channels=False, save=False,
     stachans = list(set([(tr.stats.station, tr.stats.channel)
                          for tr in real_template]))
     fig, axes = plt.subplots(len(stachans), 1, sharex=True, figsize=(5, 10))
+<<<<<<< HEAD
     axes = axes.ravel()
+=======
+    if len(stachans) > 1:
+        axes = axes.ravel()
+>>>>>>> upstream/master
     for i, stachan in enumerate(stachans):
         real_tr = real_template.select(station=stachan[0],
                                        channel=stachan[1])[0]
@@ -1002,12 +1686,23 @@ def plot_synth_real(real_template, synthetic, channels=False, save=False,
         plt.show()
     else:
         plt.savefig(savefile)
+<<<<<<< HEAD
+=======
+        plt.close()
+    return fig
+>>>>>>> upstream/master
 
 
 def freq_mag(magnitudes, completeness, max_mag, binsize=0.2, save=False,
              savefile=None):
+<<<<<<< HEAD
     r"""Function to make a frequency-magnitude histogram and cumulative \
     density plot.  This can compute a b-value, but not a completeness at \
+=======
+    r"""Plot a frequency-magnitude histogram and cumulative density plot.
+
+    This can compute a b-value, but not a completeness at \
+>>>>>>> upstream/master
     the moment.  B-value is computed by linear fitting to section of curve \
     between completeness and max_mag.
 
@@ -1024,10 +1719,55 @@ def freq_mag(magnitudes, completeness, max_mag, binsize=0.2, save=False,
         to screen.
     :type savefile: str
     :param savefile: Filename to save to, required for save=True
+<<<<<<< HEAD
     """
     _check_save_args(save, savefile)
     # Ensure magnitudes are sorted
     magnitudes.sort()
+=======
+
+    :returns: :class: matplotlib.figure
+
+    .. Note:: See eqcorrscan.utils.mag_calc.calc_b_value for a least-squares \
+        method of estimating completeness and b-value.
+
+    .. rubric:: Example
+
+    >>> from obspy.clients.fdsn import Client
+    >>> from obspy import UTCDateTime
+    >>> from eqcorrscan.utils.plotting import freq_mag
+    >>> client = Client('IRIS')
+    >>> t1 = UTCDateTime('2012-03-26T00:00:00')
+    >>> t2 = t1 + (3 * 86400)
+    >>> catalog = client.get_events(starttime=t1, endtime=t2, minmagnitude=3)
+    >>> magnitudes = [event.preferred_magnitude().mag for event in catalog]
+    >>> freq_mag(magnitudes, completeness=4, max_mag=7) # doctest: +SKIP
+
+    .. plot::
+
+        from obspy.clients.fdsn import Client
+        from obspy import UTCDateTime
+        from eqcorrscan.utils.plotting import freq_mag
+        client = Client('IRIS')
+        t1 = UTCDateTime('2012-03-26T00:00:00')
+        t2 = t1 + (3 * 86400)
+        catalog = client.get_events(starttime=t1, endtime=t2, minmagnitude=3)
+        magnitudes = [event.preferred_magnitude().mag for event in catalog]
+        freq_mag(magnitudes, completeness=4, max_mag=7)
+    """
+    from collections import Counter
+    import warnings
+    _check_save_args(save, savefile)
+    # Ensure magnitudes are sorted
+    magnitudes.sort()
+    # Check that there are no nans or infs
+    if np.isnan(magnitudes).any():
+        warnings.warn('Found nan values, removing them')
+        magnitudes = [mag for mag in magnitudes if not np.isnan(mag)]
+    if np.isinf(magnitudes).any():
+        warnings.warn('Found inf values, removing them')
+        magnitudes = [mag for mag in magnitudes if not np.isinf(mag)]
+>>>>>>> upstream/master
     fig, ax1 = plt.subplots()
     # Set up the bins, the bin-size could be a variables
     bins = np.arange(min(magnitudes), max(magnitudes), binsize)
@@ -1037,15 +1777,34 @@ def freq_mag(magnitudes, completeness, max_mag, binsize=0.2, save=False,
     ax1.set_ylim([0, max(n) + 0.5 * max(n)])
     plt.xlabel('Magnitude')
     # Now make the cumulative density function
+<<<<<<< HEAD
     cdf = np.arange(len(magnitudes)) / float(len(magnitudes))
     cdf = ((cdf * -1.0) + 1.0) * len(magnitudes)
     ax2 = ax1.twinx()
     ax2.scatter(magnitudes, np.log10(cdf), c='k', marker='+', s=20, lw=2,
+=======
+    counts = Counter(magnitudes)
+    cdf = np.zeros(len(counts))
+    mag_steps = np.zeros(len(counts))
+    for i, magnitude in enumerate(sorted(counts.keys(), reverse=True)):
+        mag_steps[i] = magnitude
+        if i > 0:
+            cdf[i] = cdf[i-1] + counts[magnitude]
+        else:
+            cdf[i] = counts[magnitude]
+    ax2 = ax1.twinx()
+    # ax2.scatter(magnitudes, np.log10(cdf), c='k', marker='+', s=20, lw=2,
+    ax2.scatter(mag_steps, np.log10(cdf), c='k', marker='+', s=20, lw=2,
+>>>>>>> upstream/master
                 label='Magnitude cumulative density')
     # Now we want to calculate the b-value and plot the fit
     x = []
     y = []
+<<<<<<< HEAD
     for i, magnitude in enumerate(magnitudes):
+=======
+    for i, magnitude in enumerate(mag_steps):
+>>>>>>> upstream/master
         if magnitude >= completeness <= max_mag:
             x.append(magnitude)
             y.append(cdf[i])
@@ -1055,22 +1814,42 @@ def freq_mag(magnitudes, completeness, max_mag, binsize=0.2, save=False,
              label='GR trend, b-value = ' + str(abs(fit[0]))[0:4] +
              '\n $M_C$ = ' + str(completeness))
     ax2.set_ylabel('$Log_{10}$ of cumulative density')
+<<<<<<< HEAD
     plt.xlim([min(magnitudes) - 0.5, max(np.log10(cdf)) + 0.2])
     plt.ylim([min(magnitudes) - 0.5, max(np.log10(cdf)) + 1.0])
+=======
+    plt.xlim([min(magnitudes) - 0.1, max(magnitudes) + 0.2])
+    plt.ylim([min(np.log10(cdf)) - 0.5, max(np.log10(cdf)) + 1.0])
+>>>>>>> upstream/master
     plt.legend(loc=2)
     if not save:
         plt.show()
     else:
         plt.savefig(savefile)
+<<<<<<< HEAD
+=======
+        plt.close()
+    return fig
+>>>>>>> upstream/master
 
 
 def spec_trace(traces, cmap=None, wlen=0.4, log=False, trc='k',
                tralpha=0.9, size=(10, 13), Fig=None, title=None, show=True):
+<<<<<<< HEAD
     r"""Wrapper for _spec_trace, take a stream or list of traces and plots \
     the trace with the spectra beneath it - this just does the overseeing to \
     work out if it needs to add subplots or not.
 
     :type traces: either stream or list of traces
+=======
+    r"""Wrapper for _spec_trace, plots data with spectrogram beneath.
+
+    Takes a stream or list of traces and plots \
+    the trace with the spectra beneath it - this just does the overseeing to \
+    work out if it needs to add subplots or not.
+
+    :type traces: list
+>>>>>>> upstream/master
     :param traces: Traces to be plotted, can be a single obspy.Stream, or a \
         list of obspy.Trace
     :type cmap: str
@@ -1091,6 +1870,25 @@ def spec_trace(traces, cmap=None, wlen=0.4, log=False, trc='k',
     :param axes: Figure to plot onto, defaults to self generating.
     :type show: bool
     :param show: To show plot or not, if false, will return Fig.
+<<<<<<< HEAD
+=======
+
+    :returns: :class: matplotlib.figure
+
+    .. rubric:: Example
+
+    >>> from obspy import read
+    >>> from eqcorrscan.utils.plotting import spec_trace
+    >>> st = read()
+    >>> spec_trace(st, trc='white') # doctest: +SKIP
+
+    .. plot::
+
+        from obspy import read
+        from eqcorrscan.utils.plotting import spec_trace
+        st = read()
+        spec_trace(st, trc='white')
+>>>>>>> upstream/master
     """
     from obspy import Stream
     if isinstance(traces, Stream):
@@ -1127,6 +1925,10 @@ def spec_trace(traces, cmap=None, wlen=0.4, log=False, trc='k',
         plt.suptitle(title)
     if show:
         plt.show()
+<<<<<<< HEAD
+=======
+        plt.close()
+>>>>>>> upstream/master
     else:
         return Fig
 
@@ -1134,9 +1936,16 @@ def spec_trace(traces, cmap=None, wlen=0.4, log=False, trc='k',
 def _spec_trace(trace, cmap=None, wlen=0.4, log=False, trc='k',
                 tralpha=0.9, size=(10, 2.5), axes=None, title=None):
     r"""Function to plot a trace over that traces spectrogram.
+<<<<<<< HEAD
     Uses obspys spectrogram routine.
 
     :type trace: obspy.Trace
+=======
+
+    Uses obspys spectrogram routine.
+
+    :type trace: obspy.core.trace.Trace
+>>>>>>> upstream/master
     :param trace: trace to plot
     :type cmap: str
     :param cmap: [Matplotlib colormap](http://matplotlib.org/examples/color/
@@ -1177,6 +1986,10 @@ def _spec_trace(trace, cmap=None, wlen=0.4, log=False, trc='k',
     if not axes:
         Fig.set_size_inches(size)
         Fig.show()
+<<<<<<< HEAD
+=======
+        Fig.close()
+>>>>>>> upstream/master
     else:
         return ax1, ax2
 

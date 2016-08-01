@@ -7,37 +7,66 @@ import unittest
 class TestImport(unittest.TestCase):
     def test_import(self):
         import sys
+<<<<<<< HEAD
         sys.path.insert(0, '/usr/lib/pyshared/python2.7')
+=======
+        if sys.version_info.major == 2:
+            sys.path.insert(0, '/usr/lib/pyshared/python2.7')
+>>>>>>> upstream/master
         # Insert path for travis
         i = 0
         try:
             import cv2  # NOQA
+<<<<<<< HEAD
         except:
+=======
+        except ImportError:
+>>>>>>> upstream/master
             print("You have not properly installed: cv2")
             i += 1
         try:
             import joblib  # NOQA
+<<<<<<< HEAD
         except:
+=======
+        except ImportError:
+>>>>>>> upstream/master
             print("You have not properly installed: joblib")
             i += 1
         try:
             import numpy  # NOQA
+<<<<<<< HEAD
         except:
+=======
+        except ImportError:
+>>>>>>> upstream/master
             print("You have not properly installed: numpy")
             i += 1
         try:
             import matplotlib.pyplot  # NOQA
+<<<<<<< HEAD
         except:
+=======
+        except ImportError:
+>>>>>>> upstream/master
             print("You have not properly installed: matplotlib")
             i += 1
         try:
             import scipy  # NOQA
+<<<<<<< HEAD
         except:
+=======
+        except ImportError:
+>>>>>>> upstream/master
             print("You have not properly installed: scipy")
             i += 1
         try:
             from obspy import read  # NOQA
+<<<<<<< HEAD
         except:
+=======
+        except ImportError:
+>>>>>>> upstream/master
             print("You have not properly installed: obspy")
             i += 1
         self.assertEqual(i, 0)

@@ -3,6 +3,7 @@ Functions to read log-files for seismic data to determine whether there are \
 timing issues present.  Designed to be used with the EQcorrscan package and \
 to flag data that has more than a threshold timing issue.
 
+<<<<<<< HEAD
 Currently only written to read RefTek rt130 log-files.
 
 Written by Calum Chamberlain, VUW 2015
@@ -24,6 +25,19 @@ This file is part of EQcorrscan.
     You should have received a copy of the GNU General Public License
     along with EQcorrscan.  If not, see <http://www.gnu.org/licenses/>.
 
+=======
+.. note:: Currently only written to read RefTek rt130 log-files, and will not \
+    read all parameters - only for use when checking logs during \
+    cross-correlation.  For full log-file exploration, Passcal tools: logpeek \
+    is useful.
+
+:copyright:
+    Calum Chamberlain, Chet Hopp.
+
+:license:
+    GNU Lesser General Public License, Version 3
+    (https://www.gnu.org/copyleft/lesser.html)
+>>>>>>> upstream/master
 """
 from __future__ import absolute_import
 from __future__ import division
@@ -31,12 +45,19 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 
+<<<<<<< HEAD
 def Read_RT_log(logfile, startdate):
     """
+=======
+def rt_time_log(logfile, startdate):
+    """
+    Open and read reftek raw log-file.
+>>>>>>> upstream/master
     Function to open and read a log-file as written by a RefTek RT130 \
     datalogger. The information within is then scanned for timing errors \
     above the threshold.
 
+<<<<<<< HEAD
     :type logfile: String
     :param logfile: The logfile to look in
     :type startdate: :class: datetime.date
@@ -44,11 +65,19 @@ def Read_RT_log(logfile, startdate):
         and the julian day, but not the year.
     :type time_thresh: float
     :param time_thresh: Threshold to raise a flag for the data in seconds
+=======
+    :type logfile: str
+    :param logfile: The logfile to look in
+    :type startdate: datetime.date
+    :param startdate: The start of the file as a date - files contain timing \
+        and the julian day, but not the year.
+>>>>>>> upstream/master
 
     :returns: List of tuple of :class: datetime.datetime, float as time \
         stamps and phase error.
     """
     import datetime as dt
+<<<<<<< HEAD
     f = open(logfile, 'r')
     phase_err = []
     lock = []
@@ -63,10 +92,44 @@ def Read_RT_log(logfile, startdate):
         elif line[13:-1].strip() == "EXTERNAL CLOCK POWER IS TURNED OFF":
             lock.append((dt.datetime.strptime(str(startdate.year) +
                                               ':'+line[0:12],
+=======
+    import re
+    import os
+    import io
+    import warnings
+    if os.name == 'nt':
+        f = io.open(logfile, 'rb')
+    else:
+        f = io.open(logfile, 'rb')
+    phase_err = []
+    lock = []
+    # Extract all the phase errors
+    for line_binary in f:
+        try:
+            line = line_binary.decode("utf8", "ignore")
+        except UnicodeDecodeError:
+            warnings.warn('Cannot decode line, skipping')
+            continue
+        if re.search("INTERNAL CLOCK PHASE ERROR", line):
+            match = re.search("INTERNAL CLOCK PHASE ERROR", line)
+            d_start = match.start() - 13
+            phase_err.append((dt.datetime.strptime(str(startdate.year) +
+                                                   ':' +
+                                                   line[d_start:d_start + 12],
+                                                   '%Y:%j:%H:%M:%S'),
+                             float(line.rstrip().split()[-2]) *
+                             0.000001))
+        elif re.search("EXTERNAL CLOCK POWER IS TURNED OFF", line):
+            match = re.search("EXTERNAL CLOCK POWER IS TURNED OFF", line)
+            d_start = match.start() - 13
+            lock.append((dt.datetime.strptime(str(startdate.year) +
+                                              ':'+line[d_start:d_start + 12],
+>>>>>>> upstream/master
                                               '%Y:%j:%H:%M:%S'),
                         999))
     if len(phase_err) == 0 and len(lock) > 0:
         phase_err = lock
+<<<<<<< HEAD
     return phase_err
 
 
@@ -76,6 +139,79 @@ def Flag_time_err(phase_err, time_thresh=0.02):
     and return a list of time stamps with timing errors above a threshold.
 
     :type phase_err: List of Tuple of float, datetime.datetime
+=======
+    f.close()
+    return phase_err
+
+
+def rt_location_log(logfile):
+    """
+    Extract location information from a RefTek raw log-file.
+    Function to read a specific RefTek RT130 log-file and find all location \
+    information.
+
+    :type logfile: str
+    :param logfile: The logfile to look in
+
+    :returns: list of tuples of lat, lon, elevation in decimal degrees and km.
+    """
+    import re
+    import os
+    import warnings
+    if os.name == 'nt':
+        f = open(logfile, 'rb')
+    else:
+        f = open(logfile, 'rb')
+    locations = []
+    for line_binary in f:
+        try:
+            line = line_binary.decode("utf8", "ignore")
+        except UnicodeDecodeError:
+            warnings.warn('Cannot decode line, skipping')
+            print(line_binary)
+            continue
+        match = re.search("GPS: POSITION:", line)
+        if match:
+            # Line is of form:
+            # jjj:hh:mm:ss GPS: POSITION: xDD:MM:SS.SS xDDD:MM:SS.SS xMMMMMMM
+            loc = line[match.end() + 1:].rstrip().split(' ')
+            lat_sign = loc[0][0]
+            lat = loc[0][1:].split(':')
+            lat = int(lat[0]) + (int(lat[1]) / 60.0) + (float(lat[2]) / 3600.0)
+            if lat_sign == 'S':
+                lat *= -1
+            lon_sign = loc[1][0]
+            lon = loc[1][1:].split(':')
+            lon = int(lon[0]) + (int(lon[1]) / 60.0) + (float(lon[2]) / 3600.0)
+            if lon_sign == 'W':
+                lon *= -1
+            elev_sign = loc[2][0]
+            elev_unit = loc[2][-1]
+            if not elev_unit == 'M':
+                raise NotImplementedError('Elevation is not in M: unit=' + elev_unit)
+            elev = int(loc[2][1:-1])
+            if elev_sign == '-':
+                elev *= -1
+            # Convert to km
+            elev /= 1000
+            locations.append((lat, lon, elev))
+    f.close()
+    return locations
+
+
+def flag_time_err(phase_err, time_thresh=0.02):
+    """
+    Find large time errors in list.
+    Scan through a list of tuples of time stamps and phase errors \
+    and return a list of time stamps with timing errors above a threshold.
+
+    .. note:: This becomes important for networks cross-correlations, where \
+    if timing information is uncertain at one site, the relative arrival \
+    time (lag) will be incorrect, which will degrade the cross-correlation sum.
+
+    :type phase_err: list
+    :param phase_err: List of Tuple of float, datetime.datetime
+>>>>>>> upstream/master
     :type time_thresh: float
     :param time_thresh: Threshold to declare a timing error for
 
@@ -90,9 +226,15 @@ def Flag_time_err(phase_err, time_thresh=0.02):
 
 def check_all_logs(directory, time_thresh):
     """
+<<<<<<< HEAD
     Function to check all the log-files in a directory tree for timing errors.
 
     :type directory: String
+=======
+    Check all the log-files in a directory tree for timing errors.
+
+    :type directory: str
+>>>>>>> upstream/master
     :param directory: Directory to search within
     :type time_thresh: float
     :param time_thresh: Time threshold in seconds
@@ -109,10 +251,17 @@ def check_all_logs(directory, time_thresh):
     for i, log_file in enumerate(log_files):
         startdate = dt.datetime.strptime(log_file.split('/')[-4][0:7],
                                          '%Y%j').date()
+<<<<<<< HEAD
         total_phase_errs += Read_RT_log(log_file, startdate)
         sys.stdout.write("\r"+str(float(i) / len(log_files) * 100)+"% \r")
         sys.stdout.flush()
     time_errs = Flag_time_err(total_phase_errs, time_thresh)
+=======
+        total_phase_errs += rt_time_log(log_file, startdate)
+        sys.stdout.write("\r"+str(float(i) / len(log_files) * 100)+"% \r")
+        sys.stdout.flush()
+    time_errs = flag_time_err(total_phase_errs, time_thresh)
+>>>>>>> upstream/master
     time_errs.sort()
     return time_errs, total_phase_errs
 
