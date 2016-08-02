@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-
-stacking
---------
-.. automodule:: stacking
-    :members:
-    :private-members:
-=======
 stacking
 --------
 
@@ -25,4 +17,3 @@ stacking
        align_traces
 
     .. comment to end block
->>>>>>> upstream/master

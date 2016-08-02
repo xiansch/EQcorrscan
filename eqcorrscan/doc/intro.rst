@@ -30,51 +30,28 @@ documentation.  Ideally we would like to have one test for every function!
 
 Installation
 ------------
-<<<<<<< HEAD
-A fresh install should be as simple as:
-=======
 
 In general we recommend users to install EQcorrscan in a virtual environment,
 for this the virtualenvwrapper package is handy.
 
 Within a virtual environment, a fresh install should be as simple as:
->>>>>>> upstream/master
 
 **pip install eqcorrscan**
 
 Most codes should work without any effort on your part.  However you may need to
 install the openCV-python package yourself.
 
-<<<<<<< HEAD
-On Linux:
-
-**apt-get install python-opencv**
-
-On OSX:
-=======
 On Linux with Python 2.7:
 
 **apt-get install python-opencv**
 
 On OSX with Python 2.7:
->>>>>>> upstream/master
 
 **port install py27-numpy**
 **port install opencv +python27**
 or
 **brew install opencv**
 
-<<<<<<< HEAD
-Note you may have issues with homebrew if you don't have numpy installed: but if
-you don't have numpy installed then you have bigger issues...
-
-This install has only been tested on Linux and OSX machines.  You
-should be prepared for small differences in the results of your correlations
-relating to floating-point truncation differences between 32 and 64-Bit
-machines.
-
-If you plan to run the bright_lights or generating a synthetic grid of
-=======
 You can also install from source; for Python 3 this is a must as you will have
 to install openCV 3.  |pyimagesearch| has lots of lovely tutorials like this
 |cv3_ubuntu|.
@@ -97,7 +74,6 @@ Note you may have issues with these installs if you don't have numpy installed: 
 you don't have numpy installed then you have bigger issues...
 
 If you plan to run the *bright_lights* or generating a synthetic grid of
->>>>>>> upstream/master
 templates you will need to have grid csv files, which the authors have
 previously used NonLinLoc to generate.  This is not provided here and should
 be sourced from |NLLoc_link|. This will provide
@@ -113,33 +89,16 @@ required to give.
 Supported environments
 ----------------------
 
-<<<<<<< HEAD
-Currently we only support Linux and OSX environments running Python 2.7.  We
-do not yet support Python 3.x as the multiprocessing package we rely on, called
-multiprocessing, has not been ported to Python 3.x.  EQcorrscan is mostly ready
-to go syntax-wise for 3.x, so when the dependencies get ported we should be
-good to go.
-=======
 We support Linux, OSX and Windows environments running Python 2.7 and 3.5.
 We don't run our tests on other versions of Python so you might have some issues
 with other Python 3.x series, if you do, let us know.
 
 We do **not** support Python 2.6.
->>>>>>> upstream/master
 
 
 Functions
 ---------
 
-<<<<<<< HEAD
-This package is divided into sub-directories of *core* and *utils*.  The
-*utils* directory contains simple functions for integration with |seisan_link|,
-these are in the *Sfile_util.py*
-module and functions therein which are essentially barebones and do not have the
-full functionality that seisan can handle.  *utils* also contains a simple
-peak-finding algorithm *find_peaks.py* which looks for peaks within noisy data
-above a certain threshold and within windows.  Many other functions have been
-=======
 This package is divided into sub-directories of :doc:`core </core>` and :doc:`utils </utils>`.  The
 :doc:`utils </utils>` directory contains simple functions for integration with |seisan_link|,
 these are in the :doc:`sfile_util </submodules/utils.sfile_util>`
@@ -149,7 +108,6 @@ peak-finding algorithm :doc:`findpeaks </submodules/utils.findpeaks>` which look
 above a certain threshold and within windows.
 
 Many other functions have been
->>>>>>> upstream/master
 added to this module to handle the analysis of repeating and near-repeating
 earthquakes, including stacking routines, clustering algorithms, magnitude
 calculation both by amplitude picking and by singular value decomposition.  I
@@ -162,25 +120,15 @@ my main project focus.
 
   <a href="http://seisan.info/" target="_blank">Seisan</a>
 
-<<<<<<< HEAD
-Since earlier versions the *core* modules have moved away from using parameter
-=======
 Since earlier versions the :doc:`core </core>` modules have moved away from using parameter
->>>>>>> upstream/master
 files, and instead rely on explicit argument calls.  The parameter files are
 still included by not documented here (see inside the par files), and remain
 useful when generating batch scripts (see the scripts in the github repo).
 
-<<<<<<< HEAD
-Within *core* you will find the core routines to generate templates,
-*(template_gen)* search for likely templates *(bright_lights)* and
-compute cross-channel correlations from these templates *(match_filter)*.  The
-=======
 Within :doc:`core </core>` you will find the core routines to generate templates,
 (:doc:`template_gen </submodules/core.template_gen>`) search for likely templates
 (:doc:`bright_lights </submodules/core.bright_lights>`) and
 compute cross-channel correlations from these templates (:doc:`match_filter </submodules/core.match_filter>`).  The
->>>>>>> upstream/master
 bright_lights and match_filter submodules have been designed with parallel
 computing in mind, to the extent that the more cores and machines you have
 running them the better.  These rely on the python multiprocessing module to

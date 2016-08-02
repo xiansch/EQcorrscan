@@ -1,8 +1,6 @@
 Matched-filter detection
 ========================
 
-<<<<<<< HEAD
-=======
 Simple example
 --------------
 
@@ -46,7 +44,6 @@ if this is set and the file already exists, it will just add on to the old file.
 Advanced example
 ----------------
 
->>>>>>> upstream/master
 In this section we will outline using the templates generated in the first tutorial
 to scan for similar earthquakes within a day of data.  This small example does not truly exploit the parallel
 operations within this package however, so you would be encouraged to think
@@ -70,12 +67,6 @@ your call.
 
 .. literalinclude:: ../../tutorials/match_filter.py
 
-<<<<<<< HEAD
-References
-----------
-* CM Boese, J Townend, E Smith, T Stern (2012). `Microseismicity and stress in the vicinity of the Alpine Fault, central Southern Alps, New Zealand <http://onlinelibrary.wiley.com/doi/10.1029/2011JB008460/full>`_, *JGR*, doi:10.1029/2011JB008460
-* CM Boese, KM Jacobs, EGC Smith, TA Stern, J Townend (2014). `Background and delayed-triggered swarms in the central Southern Alps, South Island, New Zealand <http://onlinelibrary.wiley.com/doi/10.1002/2013GC005171/full>`_, *G-cubed*, doi:10.1002/2013GC005171
-=======
 
 SLURM example
 -------------
@@ -145,4 +136,3 @@ this section of the script is as follows:
 The full script is not included in EQcorrscan, but is available on request.
 
 
->>>>>>> upstream/master

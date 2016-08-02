@@ -1,10 +1,5 @@
 match_filter
 ------------
-<<<<<<< HEAD
-.. automodule:: match_filter
-    :members:
-    :private-members:
-=======
 
 .. currentmodule:: eqcorrscan.core.match_filter
 .. automodule:: eqcorrscan.core.match_filter
@@ -35,4 +30,3 @@ match_filter
 
        _channel_loop
        _template_loop
->>>>>>> upstream/master

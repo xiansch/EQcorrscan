@@ -3,29 +3,6 @@ Functions to read log-files for seismic data to determine whether there are \
 timing issues present.  Designed to be used with the EQcorrscan package and \
 to flag data that has more than a threshold timing issue.
 
-<<<<<<< HEAD
-Currently only written to read RefTek rt130 log-files.
-
-Written by Calum Chamberlain, VUW 2015
-
-Copyright 2015 Calum Chamberlain
-
-This file is part of EQcorrscan.
-
-    EQcorrscan is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    EQcorrscan is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with EQcorrscan.  If not, see <http://www.gnu.org/licenses/>.
-
-=======
 .. note:: Currently only written to read RefTek rt130 log-files, and will not \
     read all parameters - only for use when checking logs during \
     cross-correlation.  For full log-file exploration, Passcal tools: logpeek \
@@ -37,7 +14,6 @@ This file is part of EQcorrscan.
 :license:
     GNU Lesser General Public License, Version 3
     (https://www.gnu.org/copyleft/lesser.html)
->>>>>>> upstream/master
 """
 from __future__ import absolute_import
 from __future__ import division
@@ -45,54 +21,23 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 
-<<<<<<< HEAD
-def Read_RT_log(logfile, startdate):
-    """
-=======
 def rt_time_log(logfile, startdate):
     """
     Open and read reftek raw log-file.
->>>>>>> upstream/master
     Function to open and read a log-file as written by a RefTek RT130 \
     datalogger. The information within is then scanned for timing errors \
     above the threshold.
 
-<<<<<<< HEAD
-    :type logfile: String
-    :param logfile: The logfile to look in
-    :type startdate: :class: datetime.date
-    :param startdate: The start of the file as a date - files contain timing \
-        and the julian day, but not the year.
-    :type time_thresh: float
-    :param time_thresh: Threshold to raise a flag for the data in seconds
-=======
     :type logfile: str
     :param logfile: The logfile to look in
     :type startdate: datetime.date
     :param startdate: The start of the file as a date - files contain timing \
         and the julian day, but not the year.
->>>>>>> upstream/master
 
     :returns: List of tuple of :class: datetime.datetime, float as time \
         stamps and phase error.
     """
     import datetime as dt
-<<<<<<< HEAD
-    f = open(logfile, 'r')
-    phase_err = []
-    lock = []
-    # Extract all the phase errors
-    for line in f:
-        if line[13:39] == "INTERNAL CLOCK PHASE ERROR":
-            phase_err.append((dt.datetime.strptime(str(startdate.year) +
-                                                   ':'+line[0:12],
-                                                   '%Y:%j:%H:%M:%S'),
-                             float(line.split(' ')[-2]) *
-                             0.000001))
-        elif line[13:-1].strip() == "EXTERNAL CLOCK POWER IS TURNED OFF":
-            lock.append((dt.datetime.strptime(str(startdate.year) +
-                                              ':'+line[0:12],
-=======
     import re
     import os
     import io
@@ -124,22 +69,10 @@ def rt_time_log(logfile, startdate):
             d_start = match.start() - 13
             lock.append((dt.datetime.strptime(str(startdate.year) +
                                               ':'+line[d_start:d_start + 12],
->>>>>>> upstream/master
                                               '%Y:%j:%H:%M:%S'),
                         999))
     if len(phase_err) == 0 and len(lock) > 0:
         phase_err = lock
-<<<<<<< HEAD
-    return phase_err
-
-
-def Flag_time_err(phase_err, time_thresh=0.02):
-    """
-    Fucntion to scan through a list of tuples of time stamps and phase errors \
-    and return a list of time stamps with timing errors above a threshold.
-
-    :type phase_err: List of Tuple of float, datetime.datetime
-=======
     f.close()
     return phase_err
 
@@ -211,7 +144,6 @@ def flag_time_err(phase_err, time_thresh=0.02):
 
     :type phase_err: list
     :param phase_err: List of Tuple of float, datetime.datetime
->>>>>>> upstream/master
     :type time_thresh: float
     :param time_thresh: Threshold to declare a timing error for
 
@@ -226,15 +158,9 @@ def flag_time_err(phase_err, time_thresh=0.02):
 
 def check_all_logs(directory, time_thresh):
     """
-<<<<<<< HEAD
-    Function to check all the log-files in a directory tree for timing errors.
-
-    :type directory: String
-=======
     Check all the log-files in a directory tree for timing errors.
 
     :type directory: str
->>>>>>> upstream/master
     :param directory: Directory to search within
     :type time_thresh: float
     :param time_thresh: Time threshold in seconds
@@ -251,17 +177,10 @@ def check_all_logs(directory, time_thresh):
     for i, log_file in enumerate(log_files):
         startdate = dt.datetime.strptime(log_file.split('/')[-4][0:7],
                                          '%Y%j').date()
-<<<<<<< HEAD
-        total_phase_errs += Read_RT_log(log_file, startdate)
-        sys.stdout.write("\r"+str(float(i) / len(log_files) * 100)+"% \r")
-        sys.stdout.flush()
-    time_errs = Flag_time_err(total_phase_errs, time_thresh)
-=======
         total_phase_errs += rt_time_log(log_file, startdate)
         sys.stdout.write("\r"+str(float(i) / len(log_files) * 100)+"% \r")
         sys.stdout.flush()
     time_errs = flag_time_err(total_phase_errs, time_thresh)
->>>>>>> upstream/master
     time_errs.sort()
     return time_errs, total_phase_errs
 

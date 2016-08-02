@@ -1,10 +1,5 @@
 bright_lights
 -------------
-<<<<<<< HEAD
-.. automodule:: bright_lights
-    :members:
-    :private-members:
-=======
 
 .. currentmodule:: eqcorrscan.core.bright_lights
 .. automodule:: eqcorrscan.core.bright_lights
@@ -41,4 +36,3 @@ bright_lights
 
 
     .. comment to end block
->>>>>>> upstream/master

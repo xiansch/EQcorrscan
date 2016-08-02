@@ -1,10 +1,5 @@
 sfile_util
 ----------
-<<<<<<< HEAD
-.. automodule:: sfile_util
-    :members:
-    :private-members:
-=======
 
 .. currentmodule:: eqcorrscan.utils.sfile_util
 .. automodule:: eqcorrscan.utils.sfile_util
@@ -47,4 +42,3 @@ sfile_util
       _str_conv
 
     .. comment to end block
->>>>>>> upstream/master

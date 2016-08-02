@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-
-clustering
-----------
-.. automodule:: clustering
-    :members:
-    :private-members:
-=======
 clustering
 ----------
 
@@ -35,4 +27,3 @@ clustering
        space_time_cluster
 
     .. comment to end block
->>>>>>> upstream/master

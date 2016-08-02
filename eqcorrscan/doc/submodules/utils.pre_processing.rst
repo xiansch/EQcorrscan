@@ -1,10 +1,5 @@
 pre_processing
 --------------
-<<<<<<< HEAD
-.. automodule:: pre_processing
-    :members:
-    :private-members:
-=======
 
 .. currentmodule:: eqcorrscan.utils.pre_processing
 .. automodule:: eqcorrscan.utils.pre_processing
@@ -22,4 +17,3 @@ pre_processing
        shortproc
 
     .. comment to end block
->>>>>>> upstream/master

@@ -1,9 +1,6 @@
 Clustering and stacking
 =======================
 
-<<<<<<< HEAD
-To be completed.
-=======
 Prior to template generation, it may be beneficial to cluster earthquake
 waveforms.  Clusters of earthquakes with similar properties can then be
 stacked to create higher signal-to-noise templates that describe the dataset
@@ -188,4 +185,3 @@ of the instantaneous phase.  In this manor coherent signals are amplified.
     # Groups are returned as lists of tuples, of the stream and event index
     group_streams = [st_tuple[0] for st_tuple in groups[0]]
     stack = PWS_stack(streams=group_streams)
->>>>>>> upstream/master

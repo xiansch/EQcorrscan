@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-
-synth_seis
-----------
-.. automodule:: synth_seis
-    :members:
-    :private-members:
-=======
 synth_seis
 ----------
 
@@ -26,4 +18,3 @@ synth_seis
        template_grid
 
     .. comment to end block
->>>>>>> upstream/master

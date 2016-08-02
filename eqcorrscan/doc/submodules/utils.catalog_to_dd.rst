@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-
-catalog_to_dd
--------------
-.. automodule:: catalog_to_dd
-    :members:
-    :private-members:
-=======
 catalog_to_dd
 -------------
 
@@ -28,4 +20,3 @@ catalog_to_dd
        write_event
 
     .. comment to end block
->>>>>>> upstream/master

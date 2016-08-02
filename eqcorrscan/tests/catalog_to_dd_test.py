@@ -1,10 +1,6 @@
 """
 Functions to test the functions within the eqcorrscan.utils.catalog_to_dd.py \
-<<<<<<< HEAD
-submodule.  Uses test data distributed with the EQcorrscan pacakge.
-=======
 submodule.  Uses test data distributed with the EQcorrscan package.
->>>>>>> upstream/master
 """
 from __future__ import absolute_import
 from __future__ import division
@@ -177,10 +173,7 @@ class TestCatalogMethods(unittest.TestCase):
                 self.assertEqual(header.origins[0].time_errors.
                                  Time_Residual_RMS,
                                  float(output_event_info[-2]))
-<<<<<<< HEAD
-=======
         f.close()
->>>>>>> upstream/master
         os.remove('event.dat')
 
     def test_write_catalog(self):
@@ -202,11 +195,8 @@ class TestCatalogMethods(unittest.TestCase):
         sfile_list = glob.glob(os.path.join(testing_path, '*L.S??????'))
         event_ids = list(range(len(sfile_list)))
         event_list = zip(event_ids, sfile_list)
-<<<<<<< HEAD
-=======
         # In python 3.x this gives an error as zip is now an object...
         event_list = list(event_list)  # Do this for compatability
->>>>>>> upstream/master
         write_catalog(event_list=event_list,
                       max_sep=maximum_seperation,
                       min_link=minimum_links)
@@ -272,10 +262,7 @@ class TestCatalogMethods(unittest.TestCase):
             else:
                 event_links.append(line)
         self.assertTrue(os.path.isfile('phase.dat'))
-<<<<<<< HEAD
-=======
         dt_file_out.close()
->>>>>>> upstream/master
         os.remove('phase.dat')
         os.remove('dt.ct')
         if os.path.isfile('dt.ct2'):
@@ -287,11 +274,6 @@ class TestCatalogMethods(unittest.TestCase):
         Hard to test accurately...
         """
         from eqcorrscan.utils.catalog_to_dd import write_correlations
-<<<<<<< HEAD
-        from eqcorrscan.utils.timer import Timer
-        import os
-        import glob
-=======
         from eqcorrscan.utils.catalog_to_dd import write_catalog
         from eqcorrscan.utils.timer import Timer
         import os
@@ -299,7 +281,6 @@ class TestCatalogMethods(unittest.TestCase):
 
         max_shift_len = 0.2
 
->>>>>>> upstream/master
         testing_path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                     'test_data', 'REA', 'TEST_')
         wavbase = os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -309,17 +290,6 @@ class TestCatalogMethods(unittest.TestCase):
         event_list = zip(event_ids, sfile_list)
         with Timer() as t:
             write_correlations(event_list, wavbase, extract_len=2,
-<<<<<<< HEAD
-                               pre_pick=0.5, shift_len=0.2, lowcut=2.0,
-                               highcut=10.0, max_sep=1, min_link=8,
-                               coh_thresh=0.0, plotvar=False)
-        msg = 'Running ' + str(len(event_list)) + ' events took %s s' % t.secs
-        print(msg)
-        self.assertTrue(os.path.isfile('dt.cc'))
-        os.remove('dt.cc')
-        if os.path.isfile('dt.cc2'):
-            os.remove('dt.cc2')
-=======
                                pre_pick=0.5, shift_len=max_shift_len,
                                lowcut=2.0, highcut=10.0, max_sep=1, min_link=8,
                                cc_thresh=0.0, plotvar=False)
@@ -410,7 +380,6 @@ class TestCatalogMethods(unittest.TestCase):
         self.assertEqual(test_catalog[1].origins[0].depth, -288)
         self.assertEqual(test_catalog[1].origins[0].time,
                          UTCDateTime('2012-01-30T06:48:43.07'))
->>>>>>> upstream/master
 
 if __name__ == '__main__':
     unittest.main()

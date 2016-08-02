@@ -1,19 +1,6 @@
 Core
 ====
 
-<<<<<<< HEAD
-Core programs for the EQcorrscan project.  To be added: Lag calculation by
-cross-correlation to find optimum phase arrival picks for near-repeating
-earthquakes.
-
-bright_lights contains a series of functions to detect events using the
-brightness-based beamforming method of Frank et. al (2014).  This has been
-tested significantly, but has failed to detect events unambiguously in the
-central Southern Alps.  As such development of these functions has ceased.
-
-template_gen contains routines for cutting waveforms around picks for use as
-templates in match_filter.  Included in this are wrappers to directly read in
-=======
 Core routines of the EQcorrscan project.  These routines concern the
 large-scale matched-filter detection of near-repeating earthquakes.  For
 this to take place a series of templates must be generated: these templates can
@@ -40,20 +27,15 @@ central Southern Alps.  As such development of these functions has ceased.
 
 template_gen_ contains routines for cutting waveforms around picks for use as
 templates in match_filter_.  Included in this are wrappers to directly read in
->>>>>>> upstream/master
 Seisan formattaed pick files and waveforms associated with the picks, and
 generate templates from these.  There are also wrappers for quakeML events
 and catalogs, and seishub databases.
 
-<<<<<<< HEAD
-match_filter contains the core routines for earthquake detection by
-=======
 .. _template_gen: submodules/core.template_gen.html
 
 **Matched-Filter**
 
 match_filter_ contains the core routines for earthquake detection by
->>>>>>> upstream/master
 cross-correlation.  This is optimized for large-scale, multi-paralleled
 detection, with large numbers of templates.  Because we are unsure of your
 architecture we have not written functions for the top level of possible
@@ -65,14 +47,6 @@ the batch job submission capability which distributes daily detections across
 multiple nodes.  This allows us to detect earthquakes through > 6 years of
 multi-channel data using > 600 templates in less than 36 hours.
 
-<<<<<<< HEAD
-.. toctree::
-   :maxdepth: 4
-
-   submodules/core.bright_lights
-   submodules/core.template_gen
-   submodules/core.match_filter
-=======
 .. _match_filter: submodules/core.match_filter.html
 
 
@@ -82,4 +56,3 @@ multi-channel data using > 600 templates in less than 36 hours.
    submodules/core.bright_lights
    submodules/core.template_gen
    submodules/core.match_filter
->>>>>>> upstream/master

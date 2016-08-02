@@ -1,51 +1,20 @@
 #!/usr/bin/python
-<<<<<<< HEAD
-r"""Code to determine the brightness function of seismic data according to a \
-three-dimensional travel-time grid.  This travel-time grid should be \
-generated using the grid2time function of the NonLinLoc package by Anthony \
-Lomax which can be found here: http://alomax.free.fr/nlloc/ and is not \
-distributed within this package as this is a very useful stand-alone library \
-=======
 r"""
 Code to determine the brightness function of seismic data according to a \
 three-dimensional travel-time grid.  This travel-time grid can be \
 generated using the grid2time function of the NonLinLoc package by Anthony \
 Lomax which can be found here: http://alomax.free.fr/nlloc/ NonLinLoc is not \
 distributed within this package but it is a very useful stand-alone library \
->>>>>>> upstream/master
 for seismic event location.
 
 This code is based on the method of Frank & Shapiro 2014.\
 
-<<<<<<< HEAD
-Code written by Calum John Chamberlain of Victoria University of Wellington, \
-2015.
-
-Copyright 2015, 2016 Calum Chamberlain
-
-This file is part of EQcorrscan.
-
-    EQcorrscan is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    EQcorrscan is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with EQcorrscan.  If not, see <http://www.gnu.org/licenses/>.
-
-=======
 :copyright:
     Calum Chamberlain, Chet Hopp.
 
 :license:
     GNU Lesser General Public License, Version 3
     (https://www.gnu.org/copyleft/lesser.html)
->>>>>>> upstream/master
 """
 from __future__ import absolute_import
 from __future__ import division
@@ -57,15 +26,9 @@ import warnings
 
 def _read_tt(path, stations, phase, phaseout='S', ps_ratio=1.68,
              lags_switch=True):
-<<<<<<< HEAD
-    r"""Function to read in .csv files of slowness generated from Grid2Time \
-    (part of NonLinLoc by Anthony Lomax) and convert this to a useful format \
-    here.
-=======
     """
     Read in .csv files of slowness generated from Grid2Time.
     Converts these data to a useful format here.
->>>>>>> upstream/master
 
     It should be noted that this can read either P or S travel-time grids, not
     both at the moment.
@@ -77,11 +40,7 @@ def _read_tt(path, stations, phase, phaseout='S', ps_ratio=1.68,
     :type phaseout: str
     :param phaseout: What phase to return the lagtimes in
     :type ps_ratio: float
-<<<<<<< HEAD
-    :param ps_ratio: p to s ratio for coversion
-=======
     :param ps_ratio: p to s ratio for conversion
->>>>>>> upstream/master
     :type lags_switch: bool
     :param lags_switch: Return lags or raw travel-times, if set to true will \
         return lags.
@@ -91,19 +50,11 @@ def _read_tt(path, stations, phase, phaseout='S', ps_ratio=1.68,
         station[1] and lags[1][1] nodes[n][n] is a tuple of latitude, \
         longitude and depth.
 
-<<<<<<< HEAD
-    .. note:: This function currently needs comma seperated grid files in \
-        NonLinLoc format.  Only certain versions of NonLinLoc write these csv \
-        files, however it should be possible to read the binary files \
-        directly.  If you find you need this capability let us know and we \
-        can try and impliment it.
-=======
     .. note:: This function currently needs comma separated grid files in \
         NonLinLoc format.  Only certain versions of NonLinLoc write these csv \
         files, however it should be possible to read the binary files \
         directly.  If you find you need this capability let us know and we \
         can try and implement it.
->>>>>>> upstream/master
     """
 
     import csv
@@ -124,19 +75,11 @@ def _read_tt(path, stations, phase, phaseout='S', ps_ratio=1.68,
     for gridfile in gridfiles:
         print('     Reading slowness from: ' + gridfile)
         f = open(gridfile, 'r')
-<<<<<<< HEAD
-        grid = csv.reader(f, delimiter=' ')
-        traveltime = []
-        nodes = []
-        for row in grid:
-            nodes.append((row[0], row[1], row[2]))
-=======
         grid = csv.reader(f, delimiter=str(' '))
         traveltime = []
         nodes = []
         for row in grid:
             nodes.append((float(row[0]), float(row[1]), float(row[2])))
->>>>>>> upstream/master
             traveltime.append(float(row[3]))
         traveltime = np.array(traveltime)
         if not phase == phaseout:
@@ -157,16 +100,6 @@ def _read_tt(path, stations, phase, phaseout='S', ps_ratio=1.68,
         # other one, e.g. for each station the grid must be the
         # same, hence allnodes=nodes
         f.close()
-<<<<<<< HEAD
-    return stations_out, allnodes, alllags
-
-
-def _resample_grid(stations, nodes, lags, mindepth, maxdepth, corners,
-                   resolution):
-    r"""Function to resample the lagtime grid to a given volume.  For use if \
-    the grid from Grid2Time is too large or you want to run a faster, \
-    downsampled scan.
-=======
     alllags = np.array(alllags)
     return stations_out, allnodes, alllags
 
@@ -176,24 +109,15 @@ def _resample_grid(stations, nodes, lags, mindepth, maxdepth, corners):
     Resample the lagtime grid to a given volume.
     For use if the grid from Grid2Time is too large or you want to run a
     faster, downsampled scan.
->>>>>>> upstream/master
 
     :type stations: list
     :param stations: List of station names from in the form where stations[i] \
         refers to nodes[i][:] and lags[i][:]
-<<<<<<< HEAD
-    :type nodes: list, tuple
-    :param nodes: List of node points where nodes[i] referes to stations[i] \
-        and nodes[:][:][0] is latitude in degrees, nodes[:][:][1] is \
-        lonitude in degrees, nodes[:][:][2] is depth in km.
-    :type lags: :class: 'numpy.array'
-=======
     :type nodes: list
     :param nodes: List of node points where nodes[i] referes to stations[i] \
         and nodes[:][:][0] is latitude in degrees, nodes[:][:][1] is \
         lonitude in degrees, nodes[:][:][2] is depth in km.
     :type lags: numpy.ndarray
->>>>>>> upstream/master
     :param lags: Array of arrays where lags[i][:] refers to stations[i]. \
         lags[i][j] should be the delay to the nodes[i][j] for stations[i] in \
         seconds.
@@ -209,12 +133,6 @@ def _resample_grid(stations, nodes, lags, mindepth, maxdepth, corners):
         'numpy.array' lags station[1] refers to nodes[1] and lags[1] \
         nodes[1][1] refers to station[1] and lags[1][1] \
         nodes[n][n] is a tuple of latitude, longitude and depth.
-<<<<<<< HEAD
-
-    .. note:: This is an internal function and \
-        should not be called directly.
-=======
->>>>>>> upstream/master
     """
     import numpy as np
 
@@ -237,38 +155,22 @@ def _resample_grid(stations, nodes, lags, mindepth, maxdepth, corners):
 
 
 def _rm_similarlags(stations, nodes, lags, threshold):
-<<<<<<< HEAD
-    r"""Function to remove those nodes that have a very similar network \
-    moveout to another lag.
-
-    Will, for each node, calculate the difference in lagtime at each \
-    station at every node, then sum these for each node to get a \
-=======
     """
     Remove nodes that have a very similar network moveout to another node.
 
     This function will, for each node, calculate the difference in lagtime
     at each station at every node, then sum these for each node to get a \
->>>>>>> upstream/master
     cumulative difference in network moveout.  This will result in an \
     array of arrays with zeros on the diagonal.
 
     :type stations: list
     :param stations: List of station names from in the form where stations[i] \
         refers to nodes[i][:] and lags[i][:]
-<<<<<<< HEAD
-    :type nodes: list, tuple
-    :param nodes: List of node points where nodes[i] referes to stations[i] \
-        and nodes[:][:][0] is latitude in degrees, nodes[:][:][1] is \
-        longitude in degrees, nodes[:][:][2] is depth in km.
-    :type lags: :class: 'numpy.array'
-=======
     :type nodes: list
     :param nodes: List of node points where nodes[i] referes to stations[i] \
         and nodes[:][:][0] is latitude in degrees, nodes[:][:][1] is \
         longitude in degrees, nodes[:][:][2] is depth in km.
     :type lags: numpy.ndarray
->>>>>>> upstream/master
     :param lags: Array of arrays where lags[i][:] refers to stations[i]. \
         lags[i][j] should be the delay to the nodes[i][j] for stations[i] in \
         seconds
@@ -279,12 +181,6 @@ def _rm_similarlags(stations, nodes, lags, threshold):
         'numpy.array' lags station[1] refers to nodes[1] and lags[1] \
         nodes[1][1] refers to station[1] and lags[1][1] \
         nodes[n][n] is a tuple of latitude, longitude and depth.
-<<<<<<< HEAD
-
-    .. note:: This is an internal function and \
-        should not be called directly.
-=======
->>>>>>> upstream/master
     """
     import sys
 
@@ -301,11 +197,7 @@ def _rm_similarlags(stations, nodes, lags, threshold):
     node_indeces = [0]
     print("\n")
     print(len(nodes))
-<<<<<<< HEAD
-    for i in xrange(1, len(nodes)):
-=======
     for i in range(1, len(nodes)):
->>>>>>> upstream/master
         if np.all(netdif[i][node_indeces]):
             node_indeces.append(i)
             nodes_out.append(nodes[i])
@@ -315,11 +207,7 @@ def _rm_similarlags(stations, nodes, lags, threshold):
 
 
 def _rms(array):
-<<<<<<< HEAD
-    """Calculate RMS of array
-=======
     """Calculate RMS of array.
->>>>>>> upstream/master
 
     .. note:: Just a lazy function using numpy functions.
     """
@@ -329,15 +217,6 @@ def _rms(array):
 
 def _node_loop(stations, lags, stream, clip_level,
                i=0, mem_issue=False, instance=0, plot=False):
-<<<<<<< HEAD
-    r"""Internal function to allow for parallelisation of brightness.
-
-    :type stations: list
-    :param stations: List of stations to use.
-    :type lags: np.ndarray
-    :param lags: List of lags where lags[i[:]] are the lags for stations[i].
-    :type stream: :class: `obspy.Stream`
-=======
     """
     Internal function to allow for brightness to be paralleled.
 
@@ -346,7 +225,6 @@ def _node_loop(stations, lags, stream, clip_level,
     :type lags: numpy.ndarray
     :param lags: List of lags where lags[i[:]] are the lags for stations[i].
     :type stream: obspy.core.stream.Stream
->>>>>>> upstream/master
     :param stream: Data stream to find the brightness for.
     :type clip_level: float
     :param clip_level: Upper limit for energy as a multiplier to the mean \
@@ -368,11 +246,8 @@ def _node_loop(stations, lags, stream, clip_level,
         should not be called directly.
     """
     import warnings
-<<<<<<< HEAD
-=======
     import os
 
->>>>>>> upstream/master
     if plot:
         import matplotlib.pyplot as plt
         import obspy.Stream
@@ -449,17 +324,6 @@ def _node_loop(stations, lags, stream, clip_level,
     if not mem_issue:
         return (i, energy)
     else:
-<<<<<<< HEAD
-        np.save('tmp' + str(instance) + '/node_' + str(i), energy)
-        return (i, 'tmp' + str(instance) + '/node_' + str(i))
-
-
-def _cum_net_resp(node_lis, instance=0):
-    r"""Function to compute the cumulative network response by reading \
-    saved energy .npy files.
-
-    :type node_lis: np.ndarray
-=======
         if not os.path.isdir('tmp' + str(instance)):
             os.makedirs('tmp' + str(instance))
         np.save('tmp' + str(instance) + '/node_' + str(i), energy)
@@ -471,16 +335,11 @@ def _cum_net_resp(node_lis, instance=0):
     Compute the cumulative network response by reading saved energy .npy files.
 
     :type node_lis: numpy.ndarray
->>>>>>> upstream/master
     :param node_lis: List of nodes (ints) to read from
     :type instance: int
     :param instance: Instance flag for parallelisation, defaults to 0.
 
-<<<<<<< HEAD
-    :returns: np.ndarray cum_net_resp, list of indeces used
-=======
     :returns: numpy.ndarray cum_net_resp, list of indeces used
->>>>>>> upstream/master
 
     .. note:: This is an internal function to ease parallel processing and \
         should not be called directly.
@@ -497,11 +356,7 @@ def _cum_net_resp(node_lis, instance=0):
         updated_indeces = np.argmax([cum_net_resp, node_energy], axis=0)
         temp = np.array([cum_net_resp, node_energy])
         cum_net_resp = np.array([temp[updated_indeces[j]][j]
-<<<<<<< HEAD
-                                 for j in xrange(len(updated_indeces))])
-=======
                                  for j in range(len(updated_indeces))])
->>>>>>> upstream/master
         del temp, node_energy
         updated_indeces[updated_indeces == 1] = i
         indeces = updated_indeces
@@ -511,21 +366,12 @@ def _cum_net_resp(node_lis, instance=0):
 
 def _find_detections(cum_net_resp, nodes, threshold, thresh_type,
                      samp_rate, realstations, length):
-<<<<<<< HEAD
-    r"""Function to find detections within the cumulative network response \
-    according to Frank et al. (2014).
-
-    :type cum_net_resp: np.ndarray
-    :param cum_net_resp: Array of cumulative network response for nodes
-    :type nodes: list of tuples
-=======
     """
     Find detections within the cumulative network response.
 
     :type cum_net_resp: numpy.ndarray
     :param cum_net_resp: Array of cumulative network response for nodes
     :type nodes: list
->>>>>>> upstream/master
     :param nodes: Nodes associated with the source of energy in the \
         cum_net_resp
     :type threshold: float
@@ -535,11 +381,7 @@ def _find_detections(cum_net_resp, nodes, threshold, thresh_type,
         (absolute) or RMS (Root Mean Squared)
     :type samp_rate: float
     :param samp_rate: Sampling rate in Hz
-<<<<<<< HEAD
-    :type realstations: list of str
-=======
     :type realstations: list
->>>>>>> upstream/master
     :param realstations: List of stations used to make the cumulative network \
         response, will be reported in the DETECTION
     :type length: float
@@ -567,24 +409,14 @@ def _find_detections(cum_net_resp, nodes, threshold, thresh_type,
         thresh = _rms(cum_net_resp) * threshold
     print('Threshold is set to: ' + str(thresh))
     print('Max of data is: ' + str(max(cum_net_resp)))
-<<<<<<< HEAD
-    peaks = findpeaks.find_peaks2(cum_net_resp, thresh,
-                                  length * samp_rate, debug=0, maxwidth=10)
-=======
     peaks = findpeaks.find_peaks2_short(cum_net_resp, thresh,
                                         length * samp_rate, debug=0)
->>>>>>> upstream/master
     detections = []
     if peaks:
         for peak in peaks:
             node = nodes[peak[1]]
-<<<<<<< HEAD
-            detections.append(DETECTION(node[0] + '_' + node[1] + '_' +
-                                        node[2], peak[1] / samp_rate,
-=======
             detections.append(DETECTION(str(node[0]) + '_' + str(node[1]) + '_' +
                                         str(node[2]), peak[1] / samp_rate,
->>>>>>> upstream/master
                                         len(realstations), peak[0], thresh,
                                         'brightness', realstations))
     else:
@@ -594,19 +426,6 @@ def _find_detections(cum_net_resp, nodes, threshold, thresh_type,
 
 
 def coherence(stream_in, stations=['all'], clip=False):
-<<<<<<< HEAD
-    r"""Function to determine the average network coherence of a given \
-    template or detection.  You will want your stream to contain only \
-    signal as noise will reduce the coherence (assuming it is incoherant \
-    random noise).
-
-    :type stream: obspy.Stream
-    :param stream: The stream of seismic data you want to calculate the \
-            coherence for.
-    :type stations: List of String
-    :param stations: List of stations to use for coherence, default is all
-    :type clip: tuple of Float
-=======
     """
     Determine the average network coherence of a given template or detection.
     You will want your stream to contain only \
@@ -619,27 +438,18 @@ def coherence(stream_in, stations=['all'], clip=False):
     :type stations: list
     :param stations: List of stations to use for coherence, default is all
     :type clip: tuple
->>>>>>> upstream/master
     :param clip: Default is to use all the data given - \
             tuple of start and end in seconds from start of trace
 
     :return: float - coherence, int number of channels used
     """
-<<<<<<< HEAD
-    from match_filter import normxcorr2
-=======
     from eqcorrscan.core.match_filter import normxcorr2
->>>>>>> upstream/master
     stream = stream_in.copy()  # Copy the data before we remove stations
     # First check that all channels in stream have data of the same length
     maxlen = np.max([len(tr.data) for tr in stream])
     if maxlen == 0:
         warnings.warn('template without data')
-<<<<<<< HEAD
-        return 0.0
-=======
         return 0.0, len(stream)
->>>>>>> upstream/master
     if not stations[0] == 'all':
         for tr in stream:
             if tr.stats.station not in stations:
@@ -675,17 +485,11 @@ def brightness(stations, nodes, lags, stream, threshold, thresh_type,
                template_length, template_saveloc, coherence_thresh,
                coherence_stations=['all'], coherence_clip=False,
                gap=2.0, clip_level=100, instance=0, pre_pick=0.2,
-<<<<<<< HEAD
-               plotsave=True, cores=1):
-    r"""Function to calculate the brightness function in terms of energy for \
-    a day of data over the entire network for a given grid of nodes.
-=======
                plotsave=True, cores=1, debug=0):
     """
     Calculate the brightness function for a single day.
     Written to calculate the brightness function for a single day of data, \
     using moveouts from a 3D travel-time grid.
->>>>>>> upstream/master
 
     Note data in stream must be all of the same length and have the same
     sampling rates.
@@ -693,18 +497,6 @@ def brightness(stations, nodes, lags, stream, threshold, thresh_type,
     :type stations: list
     :param stations: List of station names from in the form where stations[i] \
         refers to nodes[i][:] and lags[i][:]
-<<<<<<< HEAD
-    :type nodes: list, tuple
-    :param nodes: List of node points where nodes[i] referes to stations[i] \
-        and nodes[:][:][0] is latitude in degrees, nodes[:][:][1] is \
-        longitude in degrees, nodes[:][:][2] is depth in km.
-    :type lags: :class: 'numpy.array'
-    :param lags: Array of arrays where lags[i][:] refers to stations[i]. \
-        lags[i][j] should be the delay to the nodes[i][j] for stations[i] in \
-        seconds.
-    :type stream: :class: `obspy.Stream`
-    :param data: Data through which to look for detections.
-=======
     :type nodes: list
     :param nodes: List of node points where nodes[i] refers to stations[i] \
         and nodes[:][:][0] is latitude in degrees, nodes[:][:][1] is \
@@ -715,45 +507,27 @@ def brightness(stations, nodes, lags, stream, threshold, thresh_type,
         seconds.
     :type stream: obspy.core.stream.Stream
     :param stream: Data through which to look for detections.
->>>>>>> upstream/master
     :type threshold: float
     :param threshold: Threshold value for detection of template within the \
         brightness function
     :type thresh_type: str
     :param thresh_type: Either MAD or abs where MAD is the Median Absolute \
-<<<<<<< HEAD
-        Deviation and abs is an absoulte brightness.
-=======
         Deviation and abs is an absolute brightness.
->>>>>>> upstream/master
     :type template_length: float
     :param template_length: Length of template to extract in seconds
     :type template_saveloc: str
     :param template_saveloc: Path of where to save the templates.
-<<<<<<< HEAD
-    :type coherence_thresh: tuple of floats
-    :param coherence_thresh: Threshold for removing incoherant peaks in the \
-=======
     :type coherence_thresh: tuple
     :param coherence_thresh: Threshold for removing incoherent peaks in the \
->>>>>>> upstream/master
             network response, those below this will not be used as templates. \
             Must be in the form of (a,b) where the coherence is given by: \
             a-kchan/b where kchan is the number of channels used to compute \
             the coherence
     :type coherence_stations: list
-<<<<<<< HEAD
-    :param coherence_stations: List of stations to use in the coherance \
-            thresholding - defaults to 'all' which uses all the stations.
-    :type coherence_clip: float
-    :param coherence_clip: tuple
-    :type coherence_clip: Start and end in seconds of data to window around, \
-=======
     :param coherence_stations: List of stations to use in the coherence \
             thresholding - defaults to 'all' which uses all the stations.
     :type coherence_clip: tuple
     :param coherence_clip: Start and end in seconds of data to window around, \
->>>>>>> upstream/master
             defaults to False, which uses all the data given.
     :type pre_pick: float
     :param pre_pick: Seconds before the detection time to include in template
@@ -764,17 +538,6 @@ def brightness(stations, nodes, lags, stream, threshold, thresh_type,
             them - changes the backend of matplotlib, so if is set to \
             False you will see NO PLOTS!
     :type cores: int
-<<<<<<< HEAD
-    :param core: Number of cores to use, defaults to 1.
-    :type clip_level: float
-    :param clip_level: Multiplier applied to the mean deviation of the energy \
-                    as an upper limit, used to remove spikes (earthquakes, \
-                    lightning, electircal spikes) from the energy stack.
-    :type gap: float
-    :param gap: Minimum inter-event time in seconds for detections
-
-    :return: list of templates as :class: `obspy.Stream` objects
-=======
     :param cores: Number of cores to use, defaults to 1.
     :type clip_level: float
     :param clip_level: Multiplier applied to the mean deviation of the energy \
@@ -784,7 +547,6 @@ def brightness(stations, nodes, lags, stream, threshold, thresh_type,
     :param gap: Minimum inter-event time in seconds for detections
 
     :return: list of templates as :class: `obspy.core.stream.Stream` objects
->>>>>>> upstream/master
     """
     from eqcorrscan.core.template_gen import _template_gen
     if plotsave:
@@ -792,23 +554,12 @@ def brightness(stations, nodes, lags, stream, threshold, thresh_type,
         matplotlib.use('Agg')
         import matplotlib.pyplot as plt
         plt.ioff()
-<<<<<<< HEAD
-    # from joblib import Parallel, delayed
-    from multiprocessing import Pool, cpu_count
-    from copy import deepcopy
-    from obspy import read as obsread
-    from obspy.core.event import Catalog, Event, Pick, WaveformStreamID, Origin
-    from obspy.core.event import EventDescription, CreationInfo, Comment
-    import obspy.Stream
-    import matplotlib.pyplot as plt
-=======
     from multiprocessing import Pool, cpu_count
     from copy import deepcopy
     from obspy import read as obsread
     from obspy import Stream
     from obspy.core.event import Catalog, Event, Pick, WaveformStreamID, Origin
     from obspy.core.event import EventDescription, CreationInfo, Comment
->>>>>>> upstream/master
     from eqcorrscan.utils import plotting
     # Check that we actually have the correct stations
     realstations = []
@@ -837,11 +588,7 @@ def brightness(stations, nodes, lags, stream, threshold, thresh_type,
     detections = []
     detect_lags = []
     parallel = True
-<<<<<<< HEAD
-    plotvar = True
-=======
     plotvar = False
->>>>>>> upstream/master
     mem_issue = False
     # Loop through each node in the input
     # Linear run
@@ -930,11 +677,7 @@ def brightness(stations, nodes, lags, stream, threshold, thresh_type,
         cum_net_trace.stats.network = 'Z'
         cum_net_trace.stats.location = ''
         cum_net_trace.stats.starttime = stream[0].stats.starttime
-<<<<<<< HEAD
-        cum_net_trace = obspy.Stream(cum_net_trace)
-=======
         cum_net_trace = Stream(cum_net_trace)
->>>>>>> upstream/master
         cum_net_trace += stream.select(channel='*N')
         cum_net_trace += stream.select(channel='*1')
         cum_net_trace.sort(['network', 'station', 'channel'])
@@ -972,16 +715,10 @@ def brightness(stations, nodes, lags, stream, threshold, thresh_type,
                     detection.template_name.split('_')[2])
             print(node)
             # Look up node in nodes and find the associated lags
-<<<<<<< HEAD
-            index = nodes.index(node)
-            detect_lags = lags[:, index]
-            ksta = Comment(text='Number of stations=' + len(detect_lags))
-=======
             index = nodes.index((float(node[0]), float(node[1]),
                                  float(node[2])))
             detect_lags = lags[:, index]
             ksta = Comment(text='Number of stations=' + str(len(detect_lags)))
->>>>>>> upstream/master
             event.origins.append(Origin())
             event.origins[0].comments.append(ksta)
             event.origins[0].time = copy_of_stream[0].stats.starttime +\
@@ -1006,48 +743,24 @@ def brightness(stations, nodes, lags, stream, threshold, thresh_type,
                                                 pre_pick,
                                                 onset='emergent',
                                                 evalutation_mode='automatic'))
-<<<<<<< HEAD
-            print('Generating template for detection: ' + str(j))
-=======
             if debug > 0:
                 print('Generating template for detection: ' + str(j))
->>>>>>> upstream/master
             template = (_template_gen(event.picks, copy_of_stream,
                         template_length, 'all'))
             template_name = template_saveloc + '/' +\
                 str(template[0].stats.starttime) + '.ms'
             # In the interests of RAM conservation we write then read
-<<<<<<< HEAD
-            # Check coherancy here!
-=======
             # Check coherency here!
->>>>>>> upstream/master
             temp_coher, kchan = coherence(template, coherence_stations,
                                           coherence_clip)
             coh_thresh = float(coherence_thresh[0]) - kchan / \
                 float(coherence_thresh[1])
-<<<<<<< HEAD
-=======
             coherent = False
->>>>>>> upstream/master
             if temp_coher > coh_thresh:
                 template.write(template_name, format="MSEED")
                 print('Written template as: ' + template_name)
                 print('---------------------------------coherence LEVEL: ' +
                       str(temp_coher))
-<<<<<<< HEAD
-                coherant = True
-            else:
-                print('Template was incoherant, coherence level: ' +
-                      str(temp_coher))
-                coherant = False
-            del copy_of_stream, tr, template
-            if coherant:
-                templates.append(obsread(template_name))
-                nodesout += [node]
-                good_detections.append(detection)
-            else:
-=======
                 coherent = True
             elif debug > 0:
                 print('Template was incoherant, coherence level: ' +
@@ -1059,7 +772,6 @@ def brightness(stations, nodes, lags, stream, threshold, thresh_type,
                 nodesout += [node]
                 good_detections.append(detection)
             elif debug > 0:
->>>>>>> upstream/master
                 print('No template for you')
     if plotvar:
         all_detections = [(cum_net_trace[-1].stats.starttime +
@@ -1080,15 +792,9 @@ def brightness(stations, nodes, lags, stream, threshold, thresh_type,
                 cum_net_trace[0].stats.starttime.datetime.strftime('%Y%m%d') +\
                 '_NR_timeseries.pdf'
             plotting.NR_plot(cum_net_trace[0:-1],
-<<<<<<< HEAD
-                             obspy.Stream(cum_net_trace[-1]),
-                             detections=good_detections,
-                             size=(18.5, 10), save=savefile,
-=======
                              Stream(cum_net_trace[-1]),
                              detections=good_detections,
                              size=(18.5, 10), save=True, savefile=savefile,
->>>>>>> upstream/master
                              title='Network response')
     nodesout = list(set(nodesout))
     return templates, nodesout

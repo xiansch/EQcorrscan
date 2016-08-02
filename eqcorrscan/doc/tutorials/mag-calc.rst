@@ -1,13 +1,5 @@
 Magnitude calculation
 =====================
-<<<<<<< HEAD
-
-To be completed
-
-Note EQcorrscan contains both an automatic amplitude picker and a
-singular-value decomposition derived magnitude calculation, which
-is very accurate but requires high levels of event similarity.
-=======
 EQcorrscan contains both an automatic amplitude picker and a
 singular-value decomposition derived magnitude calculation, which
 is very accurate but requires high levels of event similarity.
@@ -78,4 +70,3 @@ This example requires data downloaded from the eqcorrscan github repository.
     SVectors, SValues, Uvectors, stachans = SVD(stream_list=stream_list)
     M, events_out = SVD_moments(U=Uvectors, s=SValues, V=SVectors,
                                 stachans=stachans, event_list=event_list)
->>>>>>> upstream/master

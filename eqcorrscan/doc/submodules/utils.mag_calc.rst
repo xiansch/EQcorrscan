@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-
-mag_calc
---------
-.. automodule:: mag_calc
-    :members:
-    :private-members:
-=======
 mag_calc
 --------
 
@@ -46,4 +38,3 @@ mag_calc
       _GSE2_PAZ_read
 
     .. comment to end block
->>>>>>> upstream/master

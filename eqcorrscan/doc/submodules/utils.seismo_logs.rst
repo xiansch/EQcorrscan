@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-
-seismo_logs
------------
-.. automodule:: seismo_logs
-    :members:
-    :private-members:
-=======
 seismo_logs
 -----------
 
@@ -26,4 +18,3 @@ seismo_logs
        rt_time_log
 
     .. comment to end block
->>>>>>> upstream/master

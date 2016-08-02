@@ -1,10 +1,5 @@
 sac_util
 --------
-<<<<<<< HEAD
-.. automodule:: sac_util
-    :members:
-    :private-members:
-=======
 
 .. currentmodule:: eqcorrscan.utils.sac_util
 .. automodule:: eqcorrscan.utils.sac_util
@@ -20,4 +15,3 @@ sac_util
        sactoevent
 
     .. comment to end block
->>>>>>> upstream/master

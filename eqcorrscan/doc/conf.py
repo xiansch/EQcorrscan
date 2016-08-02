@@ -16,17 +16,6 @@ import sys
 import os
 import shlex
 sys.path.insert(0, os.path.abspath('../..'))
-<<<<<<< HEAD
-import eqcorrscan
-# Use mock to allow for autodoc compilation without needing C based modules
-import mock
-MOCK_MODULES = ['matplotlib', 'matplotlib.pyplot', 'matplotlib.pylab',
-                'matplotlib.dates', 'numpy',
-                'scipy', 'scipy.spatial.distance', 'scipy.cluster.hierachy',
-                'joblib', 'obspy', 'obspy.read', 'obspy.signal',
-                'obspy.signal.cross_correlation', 'obspy.signal.filter',
-                'cv2', 'scipy.signal']
-=======
 import matplotlib
 import eqcorrscan
 
@@ -38,7 +27,6 @@ if not READ_THE_DOCS:
 import mock
 import glob
 MOCK_MODULES = ['cv2']
->>>>>>> upstream/master
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = mock.Mock()
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -48,10 +36,7 @@ sys.path.insert(0, os.path.abspath('../par'))
 sys.path.insert(0, os.path.abspath('../core'))
 sys.path.insert(0, os.path.abspath('../utils'))
 
-<<<<<<< HEAD
-=======
 sys.path = [os.path.dirname(__file__) + os.sep + '_ext'] + sys.path
->>>>>>> upstream/master
 
 
 # -- General configuration ------------------------------------------------
@@ -63,21 +48,6 @@ needs_sphinx = '1.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-<<<<<<< HEAD
-    'sphinx.ext.autodoc',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
-    'sphinx.ext.coverage',
-    'sphinx.ext.mathjax',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.autosummary',
-]
-
-# automodule:: core
-# automodule:: utils
-# automodule:: par
-
-=======
     'sphinx.ext.intersphinx',
     'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
@@ -92,7 +62,6 @@ extensions = [
     'obspydoc',
 ]
 
->>>>>>> upstream/master
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -162,12 +131,6 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 #keep_warnings = False
 
-<<<<<<< HEAD
-# If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = True
-
-
-=======
 # File formats to generate.
 plot_formats = [('png', 110), ('hires.png', 200)]
 if READ_THE_DOCS:
@@ -177,18 +140,14 @@ plot_html_show_formats = True
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
->>>>>>> upstream/master
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme = 'sphinx_rtd_theme'
-<<<<<<< HEAD
-=======
 if not READ_THE_DOCS:
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # html_theme = 'classic'
->>>>>>> upstream/master
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -435,9 +394,6 @@ epub_exclude_files = ['search.html']
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-<<<<<<< HEAD
-intersphinx_mapping = {'https://docs.python.org/': None}
-=======
 intersphinx_mapping = {
     'python': ('https://docs.python.org/2.7/', None),
     'numpy': ('https://docs.scipy.org/doc/numpy/', None),
@@ -463,4 +419,3 @@ autodoc_default_flags = ['show-inheritance']
 nitpicky = False
 
 trim_doctest_flags = True
->>>>>>> upstream/master

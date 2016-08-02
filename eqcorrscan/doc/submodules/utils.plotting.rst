@@ -1,10 +1,4 @@
 plotting
-<<<<<<< HEAD
--------------------
-.. automodule:: plotting
-    :members:
-    :private-members:
-=======
 --------
 
 .. currentmodule:: eqcorrscan.utils.plotting
@@ -37,4 +31,3 @@ plotting
        triple_plot
 
     .. comment to end block
->>>>>>> upstream/master

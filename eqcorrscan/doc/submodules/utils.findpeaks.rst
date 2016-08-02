@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-
-findpeaks
-----------
-.. automodule:: findpeaks
-    :members:
-    :private-members:
-=======
 findpeaks
 ----------
 
@@ -24,4 +16,3 @@ findpeaks
        find_peaks_dep
 
     .. comment to end block
->>>>>>> upstream/master

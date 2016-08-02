@@ -25,8 +25,6 @@ class TestMagCalcMethods(unittest.TestCase):
         self.assertEqual(round(dist_calc((90, 90, 0), (90, 89, 0))), 0)
         self.assertEqual(round(dist_calc((90, 90, 0), (89, 90, 0))), 111)
 
-<<<<<<< HEAD
-=======
     def test_sim_WA(self):
         """Test feeding both PAZ and seedresp."""
         from eqcorrscan.utils.mag_calc import _sim_WA
@@ -208,6 +206,5 @@ class TestMagCalcMethods(unittest.TestCase):
         self.assertEqual(len(M), len(stream_list))
         self.assertEqual(len(events_out), len(stream_list))
 
->>>>>>> upstream/master
 if __name__ == '__main__':
     unittest.main()

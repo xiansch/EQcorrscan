@@ -1,44 +1,14 @@
 # EQcorrscan
-<<<<<<< HEAD
-## A python package to conduct match-filter earthquake detections.
-
-[![Join the chat at https://gitter.im/calum-chamberlain/EQcorrscan](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/calum-chamberlain/EQcorrscan?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![TravisCIStatus](https://travis-ci.org/calum-chamberlain/EQcorrscan.svg?branch=master)](https://travis-ci.org/calum-chamberlain/EQcorrscan)
-=======
 ## A python package to conduct matched-filter earthquake detections.
 
 [![Join the chat at https://gitter.im/calum-chamberlain/EQcorrscan](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/calum-chamberlain/EQcorrscan?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![TravisCIStatus](https://travis-ci.org/calum-chamberlain/EQcorrscan.svg?branch=master)](https://travis-ci.org/calum-chamberlain/EQcorrscan)
 [![Build status](https://ci.appveyor.com/api/projects/status/69bpa53loaq473w7?svg=true)](https://ci.appveyor.com/project/calum-chamberlain/eqcorrscan)
 [![Coverage Status](https://coveralls.io/repos/github/calum-chamberlain/EQcorrscan/badge.svg?branch=develop)](https://coveralls.io/github/calum-chamberlain/EQcorrscan?branch=develop)
->>>>>>> upstream/master
 [![DOI](https://zenodo.org/badge/18852/calum-chamberlain/EQcorrscan.svg)](https://zenodo.org/badge/latestdoi/18852/calum-chamberlain/EQcorrscan)
 [![DocumentationStatus](http://readthedocs.org/projects/eqcorrscan/badge/?version=latest)](http://eqcorrscan.readthedocs.org/en/latest/?badge=latest)
 
 # Installation
-<<<<<<< HEAD
-Installation has been tested on both OSX and Linux (Ubuntu), we currently do not support
-Windows systems, but plan to in the future.  Installation for Linux and OS X should be as simple as:
-
-```pip install EQcorrscan```
-
-If upgrading from a previous version, rather than running install --upgrade, I recommend the following:
-
-```pip install -U --no-deps EQcorrscan```
-
-This will not try to upgrade your dependencies, which is not needed.  You may wish
-to update your obspy version to 1.0.0 which was recently released.  We have tested
-this and support it, nevertheless, if you find any issues then let us know.
-
-*You will likely need sudo permissions to run this command.*
-
-If you have any issues installing please let me know.  You will need to install openCV
-separately using (on Linux):
-
-```apt-get install python-opencv```
-
-Or, for Mac users, this is available on Macports or other similar package managers.
-=======
 Installation has been tested on both OSX and Linux (Ubuntu), and now
 Windows systems.  We support Python versions 2.7 and 3.5.  The codes likely
 work on Py 3.4 too, but we currently don't test this and recommend users to
@@ -65,7 +35,6 @@ absolute deviation of the data, so thresholds based on this will be the same,
 although the cross-correlations themselves will be shifted.  You would have to be
 running a very low threshold to see the result of this (0.5 * MAD, rather than
 commonly used values around 8 * MAD).
->>>>>>> upstream/master
 
 ## Updates
 
@@ -90,24 +59,14 @@ the gh-pages branch.
 This package contains routines to enable the user to conduct match-filter earthquake
 detections using [obspy](https://github.com/obspy/obspy/wiki) bindings when reading
 and writing seismic data, and the correlation routine in [openCV](http://opencv.org/).
-<<<<<<< HEAD
-Neither of these packages are installed by this software, due to a range of
-licenses being implemented.  However, both are open-source and should be installed
-before using this package.  This package was written to implement the Matlab routines
-=======
 The OpendCV package is not installed by this software, due to a need to build from
 source.  The user should follow the instructions above for OpenCV install.
 This package was written to implement the Matlab routines
->>>>>>> upstream/master
 used by Chamberlain et al. (2014) for the detection of low-frequency earthquakes.
 
 Also within this package are:
 * Clustering routines for seismic data;
-<<<<<<< HEAD
-* Peak finding algorithm (basic);
-=======
 * Peak finding algorithm (basic, but appropriate for noisy data);
->>>>>>> upstream/master
 * Automatic amplitude picker for local magnitude scale;
 * [Seisan](http://seisan.info/) S-file integration for database management and routine earthquake location;
 * Obspy.core.event integration, which opens up lots of other functions (Seishub, hypoDDpy etc.);
@@ -123,23 +82,15 @@ how to do the core matched-filter detection.
 # Licence
 
 This package is written by Calum Chamberlain and Chet Hopp of Victoria University of Wellington, and
-<<<<<<< HEAD
-is distributed under the LGPL GNU License, Copyright Calum Chamberlain 2015, 2016.
-=======
 is distributed under the LGPL GNU License, Copyright Calum Chamberlain and Chet Hopp 2015, 2016.
->>>>>>> upstream/master
 
 
 # Contributing
 
 Please fork this project and work on it there then create a pull request to
-<<<<<<< HEAD
-merge back into develop.
-=======
 merge back to this main repository.  If you are working on a bug-fix then
 use the *develop* branch, otherwise, create a feature branch and work
 on your addition there.
->>>>>>> upstream/master
 
 When you make changes please run the tests in the test directory to ensure
 everything merges with minimum effort.  If there is not yet a test to cope

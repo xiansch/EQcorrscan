@@ -1,31 +1,3 @@
-<<<<<<< HEAD
-"""
-Functions to simulate Wood Anderson traces, pick maximum peak-to-peak \
-amplitudes write these amplitudes and periods to SEISAN s-files and to \
-calculate magnitudes from this and the informaiton within SEISAN s-files.
-
-Written as part of the EQcorrscan package by Calum Chamberlain - first \
-written to impliment magnitudes for the 2015 Wanaka aftershock sequence, \
-written up by Warren-Smith [2014/15].
-
-Copyright 2015 Calum Chamberlain
-
-This file is part of EQcorrscan.
-
-    EQcorrscan is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    EQcorrscan is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with EQcorrscan.  If not, see <http://www.gnu.org/licenses/>.
-
-=======
 """Functions to calculate local magnitudes automatically, and to calcualte \
 relative moments for near-repeating earthquakes using singular-value \
 decomposition techniques.
@@ -36,7 +8,6 @@ decomposition techniques.
 :license:
     GNU Lesser General Public License, Version 3
     (https://www.gnu.org/copyleft/lesser.html)
->>>>>>> upstream/master
 """
 from __future__ import absolute_import
 from __future__ import division
@@ -48,13 +19,8 @@ import warnings
 
 def dist_calc(loc1, loc2):
     """
-<<<<<<< HEAD
-    Function to calcualte the distance in km between two points, uses the \
-    flat Earth approximation.
-=======
     Function to calculate the distance in km between two points.
     Uses the flat Earth approximation.
->>>>>>> upstream/master
 
     :type loc1: tuple
     :param loc1: Tuple of lat, lon, depth (in decimal degrees and km)
@@ -73,12 +39,6 @@ def dist_calc(loc1, loc2):
     return dist
 
 
-<<<<<<< HEAD
-def _sim_WA(trace, PAZ, seedresp, water_level):
-    """
-    Function to remove the insturment response from a trace and return a \
-    de-meaned, de-trended, Wood Anderson simulated trace in it's place.
-=======
 def calc_max_curv(magnitudes, plotvar=False):
     """
     Calculate the magnitude of completeness using the maximum curvature method.
@@ -250,7 +210,6 @@ def _sim_WA(trace, PAZ, seedresp, water_level):
     Remove the instrument response from a trace and simulate a Wood-Anderson.
     Returns a de-meaned, de-trended, Wood Anderson simulated trace in
     it's place.
->>>>>>> upstream/master
 
     Works in-place on data and will destroy your original data, copy the \
     trace before giving it to this function!
@@ -263,13 +222,9 @@ def _sim_WA(trace, PAZ, seedresp, water_level):
                     yourself.
     :type PAZ: dict
     :param PAZ: Dictionary containing lists of poles and zeros, the gain and
-<<<<<<< HEAD
-                the sensitivity.
-=======
                 the sensitivity. If unset will expect seedresp.
     :type seedresp: dict
     :param seedresp: Seed response information - if unset will expect PAZ.
->>>>>>> upstream/master
     :type water_level: int
     :param water_level: Water level for the simulation.
 
@@ -278,28 +233,11 @@ def _sim_WA(trace, PAZ, seedresp, water_level):
     # Note Wood anderson sensitivity is 2080 as per Uhrhammer & Collins 1990
     PAZ_WA = {'poles': [-6.283 + 4.7124j, -6.283 - 4.7124j],
               'zeros': [0 + 0j], 'gain': 1.0, 'sensitivity': 2080}
-<<<<<<< HEAD
-    from obspy.signal import seisSim
-=======
     from obspy.signal.invsim import simulate_seismometer as seis_sim
->>>>>>> upstream/master
     # De-trend data
     trace.detrend('simple')
     # Simulate Wood Anderson
     if PAZ:
-<<<<<<< HEAD
-        trace.data = seisSim(trace.data, trace.stats.sampling_rate,
-                             paz_remove=PAZ, paz_simulate=PAZ_WA,
-                             water_level=water_level, remove_sensitivity=True)
-    elif seedresp:
-        trace.data = seisSim(trace.data, trace.stats.sampling_rate,
-                             paz_remove=None, paz_simulate=PAZ_WA,
-                             water_level=water_level, seedresp=seedresp)
-    else:
-        UserWarning('No response given to remove, will just simulate WA')
-        trace.data = seisSim(trace.data, trace.stats.samplng_rate,
-                             paz_remove=None, water_level=water_level)
-=======
         trace.data = seis_sim(trace.data, trace.stats.sampling_rate,
                               paz_remove=PAZ, paz_simulate=PAZ_WA,
                               water_level=water_level, remove_sensitivity=True)
@@ -312,19 +250,13 @@ def _sim_WA(trace, PAZ, seedresp, water_level):
         trace.data = seis_sim(trace.data, trace.stats.sampling_rate,
                               paz_remove=None, paz_simulate=PAZ_WA,
                               water_level=water_level)
->>>>>>> upstream/master
     return trace
 
 
 def _max_p2t(data, delta):
     """
-<<<<<<< HEAD
-    Function to find the maximum peak-to-trough amplitude and period of this \
-    amplitude.  Originally designed to be used to calculate magnitudes (by \
-=======
     Finds the maximum peak-to-trough amplitude and period.
     Originally designed to be used to calculate magnitudes (by \
->>>>>>> upstream/master
     taking half of the peak-to-trough amplitude as the peak amplitude).
 
     :type data: ndarray
@@ -370,14 +302,9 @@ def _max_p2t(data, delta):
 
 def _GSE2_PAZ_read(GSEfile):
     """
-<<<<<<< HEAD
-    Function to read the instrument response information from a GSE Poles and \
-    Zeros file as generated by the SEISAN program RESP.
-=======
     Read the instrument response information from a GSE Poles and \
     Zeros file.
     Formatted for files generated by the SEISAN program RESP.
->>>>>>> upstream/master
 
     Format must be CAL2, not coded for any other format at the moment, \
     contact the authors to add others in.
@@ -424,12 +351,8 @@ def _GSE2_PAZ_read(GSEfile):
 
 def _find_resp(station, channel, network, time, delta, directory):
     """
-<<<<<<< HEAD
-    Helper function to find the response information for a given station and \
-=======
     Helper function to find the response information.
     Works for a given station and \
->>>>>>> upstream/master
     channel at a given time and return a dictionary of poles and zeros, gain \
     and sensitivity.
 
@@ -451,24 +374,6 @@ def _find_resp(station, channel, network, time, delta, directory):
     import glob
     from obspy.signal.invsim import evalresp
     from obspy import UTCDateTime
-<<<<<<< HEAD
-    possible_respfiles = glob.glob(directory+'/RESP.'+network+'.'+station +
-                                   '.*.' + channel)  # GeoNet RESP naming
-    possible_respfiles += glob.glob(directory+'/RESP.'+network+'.'+channel +
-                                    '.' + station)  # RDseed RESP naming
-    possible_respfiles += glob.glob(directory+'/RESP.'+station+'.'+network)
-    # WIZARD resp naming
-    # GSE format, station needs to be 5 charectars padded with _, channel is 4
-    # characters padded with _
-    possible_respfiles += glob.glob(directory+'/'+station.ljust(5, '_') +
-                                    channel[0:len(channel)-1].ljust(3, '_') +
-                                    channel[-1]+'.*_GSE')
-    PAZ = []
-    seedresp = []
-    for respfile in possible_respfiles:
-        print('Reading response from: '+respfile)
-        if respfile.split('/')[-1][0:4] == 'RESP':
-=======
     import os
     possible_respfiles = glob.glob(directory + os.path.sep + 'RESP.' +
                                    network + '.' + station +
@@ -493,7 +398,6 @@ def _find_resp(station, channel, network, time, delta, directory):
     for respfile in possible_respfiles:
         print('Reading response from: ' + respfile)
         if respfile.split(os.path.sep)[-1][0:4] == 'RESP':
->>>>>>> upstream/master
             # Read from a resp file
             seedresp = {'filename': respfile, 'date': UTCDateTime(time),
                         'units': 'DIS', 'network': network, 'station': station,
@@ -518,13 +422,8 @@ def _find_resp(station, channel, network, time, delta, directory):
             if pazdate >= time and pazchannel != channel and\
                pazstation != station:
                 print('Issue with GSE file')
-<<<<<<< HEAD
-                print('date: '+str(pazdate)+' channel: '+pazchannel +
-                      ' station: '+pazstation)
-=======
                 print('date: ' + str(pazdate) + ' channel: ' + pazchannel +
                       ' station: ' + pazstation)
->>>>>>> upstream/master
                 PAZ = []
         else:
             continue
@@ -542,11 +441,6 @@ def _pairwise(iterable):
     Wrapper on itertools for SVD_magnitude.
     """
     import itertools
-<<<<<<< HEAD
-    a, b = itertools.tee(iterable)
-    next(b, None)
-    return itertools.izip(a, b)
-=======
     import sys
     a, b = itertools.tee(iterable)
     next(b, None)
@@ -554,30 +448,11 @@ def _pairwise(iterable):
         return itertools.izip(a, b)
     else:
         return zip(a, b)
->>>>>>> upstream/master
 
 
 def Amp_pick_sfile(sfile, datapath, respdir, chans=['Z'], var_wintype=True,
                    winlen=0.9, pre_pick=0.2, pre_filt=True, lowcut=1.0,
                    highcut=20.0, corners=4):
-<<<<<<< HEAD
-    """
-    Function to read information from a SEISAN s-file, load the data and the \
-    picks, cut the data for the channels given around the S-window, simulate \
-    a Wood Anderson seismometer, then pick the maximum peak-to-trough \
-    amplitude.
-
-    Output will be put into a mag_calc.out file which will be in full S-file \
-    format and can be copied to a REA database.
-
-    :type sfile: string
-    :type datapath: string
-    :param datapath: Path to the waveform files - usually the path to the WAV \
-        directory
-    :type respdir: string
-    :param respdir: Path to the response information directory
-    :type chans: List of strings
-=======
     """Depreciated, please use amp_pick_sfile"""
     warnings.warn('Depreciation warning: Amp_pick_sfile is depreciated, ' +
                   'use amp_pick_sfile')
@@ -630,18 +505,13 @@ def amp_pick_event(event, st, respdir, chans=['Z'], var_wintype=True,
     :type respdir: str
     :param respdir: Path to the response information directory
     :type chans: list
->>>>>>> upstream/master
     :param chans: List of the channels to pick on, defaults to ['Z'] - should \
         just be the orientations, e.g. Z,1,2,N,E
     :type var_wintype: bool
     :param var_wintype: If True, the winlen will be \
         multiplied by the P-S time if both P and S picks are \
         available, otherwise it will be multiplied by the \
-<<<<<<< HEAD
-        hypocentral distance*0.34 - dervided using a p-s ratio of \
-=======
         hypocentral distance*0.34 - derived using a p-s ratio of \
->>>>>>> upstream/master
         1.68 and S-velocity of 1.5km/s to give a large window, \
         defaults to True
     :type winlen: float
@@ -659,30 +529,17 @@ def amp_pick_event(event, st, respdir, chans=['Z'], var_wintype=True,
     :param highcut: Highcut in Hz for the pre-filter, defaults to 20.0
     :type corners: int
     :param corners: Number of corners to use in the pre-filter
-<<<<<<< HEAD
-=======
 
     :returns: obspy.core.event
->>>>>>> upstream/master
     """
     # Hardwire a p-s multiplier of hypocentral distance based on p-s ratio of
     # 1.68 and an S-velocity 0f 1.5km/s, deliberately chosen to be quite slow
     ps_multiplier = 0.34
-<<<<<<< HEAD
-    from eqcorrscan.utils import sfile_util
-    from obspy import read
-    from scipy.signal import iirfilter
-    from obspy.signal.invsim import paz2AmpValueOfFreqResp
-    import warnings
-    # First we need to work out what stations have what picks
-    event = sfile_util.readpicks(sfile)[0]
-=======
     from obspy import read
     from scipy.signal import iirfilter
     from obspy.signal.invsim import paz_2_amplitude_value_of_freq_resp
     import warnings
     from obspy.core.event import Amplitude, Pick, WaveformStreamID
->>>>>>> upstream/master
     # Convert these picks into a lists
     stations = []  # List of stations
     channels = []  # List of channels
@@ -699,26 +556,6 @@ def amp_pick_event(event, st, respdir, chans=['Z'], var_wintype=True,
             picktimes.append(pick.time)
             picktypes.append(pick.phase_hint)
             arrival = [arrival for arrival in event.origins[0].arrivals
-<<<<<<< HEAD
-                       if arrival.pick_id == pick.resource_id]
-            distances.append(arrival.distance)
-    # Read in waveforms
-    stream = read(datapath+'/'+sfile_util.readwavename(sfile)[0])
-    if len(sfile_util.readwavename(sfile)) > 1:
-        for wavfile in sfile_util.readwavename(sfile):
-            stream += read(datapath+'/'+wavfile)
-    stream.merge()  # merge the data, just in case!
-    # For each station cut the window
-    uniq_stas = list(set(stations))
-    del arrival
-    for sta in uniq_stas:
-        for chan in chans:
-            print('Working on '+sta+' '+chan)
-            tr = stream.select(station=sta, channel='*'+chan)
-            if not tr:
-                # Remove picks from file
-                # picks_out=[picks_out[i] for i in xrange(len(picks))\
-=======
                        if arrival.pick_id == pick.resource_id][0]
             distances.append(arrival.distance)
     st.merge()  # merge the data, just in case!
@@ -732,7 +569,6 @@ def amp_pick_event(event, st, respdir, chans=['Z'], var_wintype=True,
             if not tr:
                 # Remove picks from file
                 # picks_out=[picks_out[i] for i in range(len(picks))\
->>>>>>> upstream/master
                 # if picks_out[i].station+picks_out[i].channel != \
                 # sta+chan]
                 warnings.warn('There is no station and channel match in the ' +
@@ -750,19 +586,11 @@ def amp_pick_event(event, st, respdir, chans=['Z'], var_wintype=True,
                     tr = dummy.merge()[0]
                 tr.filter('bandpass', freqmin=lowcut, freqmax=highcut,
                           corners=corners)
-<<<<<<< HEAD
-            sta_picks = [i for i in xrange(len(stations))
-                         if stations[i] == sta]
-            pick_id = event.picks[sta_picks[0]].resource_id
-            arrival = [arrival for arrival in event.origins[0].arrivals
-                       if arrival.pick_id == pick_id]
-=======
             sta_picks = [i for i in range(len(stations))
                          if stations[i] == sta]
             pick_id = event.picks[sta_picks[0]].resource_id
             arrival = [arrival for arrival in event.origins[0].arrivals
                        if arrival.pick_id == pick_id][0]
->>>>>>> upstream/master
             hypo_dist = arrival.distance
             CAZ = arrival.azimuth
             if var_wintype:
@@ -778,11 +606,7 @@ def amp_pick_event(event, st, respdir, chans=['Z'], var_wintype=True,
                     try:
                         tr.trim(starttime=S_pick-pre_pick,
                                 endtime=S_pick+(S_pick-P_pick)*winlen)
-<<<<<<< HEAD
-                    except:
-=======
                     except ValueError:
->>>>>>> upstream/master
                         break
                 elif 'S' in [picktypes[i] for i in sta_picks]:
                     S_pick = [picktimes[i] for i in sta_picks
@@ -793,11 +617,7 @@ def amp_pick_event(event, st, respdir, chans=['Z'], var_wintype=True,
                         tr.trim(starttime=S_pick-pre_pick,
                                 endtime=S_pick + (S_pick - P_modelled) *
                                 winlen)
-<<<<<<< HEAD
-                    except:
-=======
                     except ValueError:
->>>>>>> upstream/master
                         break
                 else:
                     # In this case we only have a P pick
@@ -809,11 +629,7 @@ def amp_pick_event(event, st, respdir, chans=['Z'], var_wintype=True,
                         tr.trim(starttime=S_modelled - pre_pick,
                                 endtime=S_modelled + (S_modelled - P_pick) *
                                 winlen)
-<<<<<<< HEAD
-                    except:
-=======
                     except ValueError:
->>>>>>> upstream/master
                         break
                 # Work out the window length based on p-s time or distance
             elif 'S' in [picktypes[i] for i in sta_picks]:
@@ -829,11 +645,7 @@ def amp_pick_event(event, st, respdir, chans=['Z'], var_wintype=True,
                 try:
                     tr.trim(starttime=S_pick - pre_pick,
                             endtime=S_pick + winlen)
-<<<<<<< HEAD
-                except:
-=======
                 except ValueError:
->>>>>>> upstream/master
                     break
             else:
                 # In this case, there is no S-pick and the window length is
@@ -849,11 +661,7 @@ def amp_pick_event(event, st, respdir, chans=['Z'], var_wintype=True,
                 try:
                     tr.trim(starttime=S_modelled - pre_pick,
                             endtime=S_modelled + winlen)
-<<<<<<< HEAD
-                except:
-=======
                 except ValueError:
->>>>>>> upstream/master
                     break
             # Find the response information
             resp_info = _find_resp(tr.stats.station, tr.stats.channel,
@@ -881,11 +689,7 @@ def amp_pick_event(event, st, respdir, chans=['Z'], var_wintype=True,
                 warnings.warn('No data found for: '+tr.stats.station)
                 # print 'No data in miniseed file for '+tr.stats.station+\
                 # ' removing picks'
-<<<<<<< HEAD
-                # picks_out=[picks_out[i] for i in xrange(len(picks_out))\
-=======
                 # picks_out=[picks_out[i] for i in range(len(picks_out))\
->>>>>>> upstream/master
                 # if i not in sta_picks]
                 break
             # Get the amplitude
@@ -910,12 +714,8 @@ def amp_pick_event(event, st, respdir, chans=['Z'], var_wintype=True,
                             'zeros': list(z),
                             'gain': k,
                             'sensitivity':  1.0}
-<<<<<<< HEAD
-                amplitude /= (paz2AmpValueOfFreqResp(filt_paz, 1 / period) *
-=======
                 amplitude /= (paz_2_amplitude_value_of_freq_resp(filt_paz,
                                                                  1 / period) *
->>>>>>> upstream/master
                               filt_paz['sensitivity'])
             # Convert amplitude to mm
             if PAZ:  # Divide by Gain to get to nm (returns pm? 10^-12)
@@ -928,43 +728,6 @@ def amp_pick_event(event, st, respdir, chans=['Z'], var_wintype=True,
             # Page 343 of Seisan manual:
             #   Amplitude (Zero-Peak) in units of nm, nm/s, nm/s^2 or counts
             amplitude *= 0.5
-<<<<<<< HEAD
-            # Generate a PICK type object for this pick
-            picks_out.append(sfile_util.PICK(station=tr.stats.station,
-                                             channel=tr.stats.channel,
-                                             impulsivity=' ',
-                                             phase='IAML',
-                                             weight='', polarity=' ',
-                                             time=tr.stats.starttime+delay,
-                                             coda=999, amplitude=amplitude,
-                                             peri=period, azimuth=float('NaN'),
-                                             velocity=float('NaN'), AIN=999,
-                                             SNR='',
-                                             azimuthres=999,
-                                             timeres=float('NaN'),
-                                             finalweight=999,
-                                             distance=hypo_dist,
-                                             CAZ=CAZ))
-    # Copy the header from the sfile to a new local S-file
-    fin = open(sfile, 'r')
-    fout = open('mag_calc.out', 'w')
-    for line in fin:
-        if not line[79] == '7':
-            fout.write(line)
-        else:
-            fout.write(line)
-            break
-    fin.close()
-    for pick in picks_out:
-        fout.write(pick)
-        # Note this uses the legacy pick class
-    fout.close()
-    # Write picks out to new s-file
-    for pick in picks_out:
-        print(pick)
-    # sfile_util.populatesfile('mag_calc.out', picks_out)
-    return picks_out
-=======
             # Append an amplitude reading to the event
             _waveform_id = WaveformStreamID(station_code=tr.stats.station,
                                             channel_code=tr.stats.channel,
@@ -1060,34 +823,10 @@ def amp_pick_sfile(sfile, datapath, respdir, chans=['Z'], var_wintype=True,
                                         readwavename(sfile))
     shutil.move(new_sfile, 'mag_calc.out')
     return event
->>>>>>> upstream/master
 
 
 def SVD_moments(U, s, V, stachans, event_list, n_SVs=4):
     """
-<<<<<<< HEAD
-    Function to convert basis vectors calculated by singular value \
-    decomposition (see the SVD functions in clustering) into relative \
-    magnitudes.
-
-    :type U: List of np.ndarray
-    :param U: List of the input basis vectors from the SVD, one array for \
-        each channel used.
-    :type s: List of nd.array
-    :param s: List of the singular values, one array for each channel
-    :type V: List of np.ndarry
-    :param V: List of output basis vectors from SVD, one array per channel.
-    :type stachans: List of string
-    :param stachans: List of station.channel input
-    :type event_list: List of list
-    :param event_list: List of events for which you have data, such that \
-        event_list[i] corresponds to stachans[i], U[i] etc. and \
-        event_list[i][j] corresponds to event j in U[i]
-    type n_SVs: int
-    :param n_SVs: Number of singular values to use, defaults to 4.
-
-    :returns: M, np.array of relative moments
-=======
     Calculate relative moments using singular-value decomposition.
 
     Convert basis vectors calculated by singular value \
@@ -1158,16 +897,11 @@ def SVD_moments(U, s, V, stachans, event_list, n_SVs=4):
     >>> M, events_out = SVD_moments(U=Uvectors, s=SValues, V=SVectors,
     ...                             stachans=stachans, event_list=event_list) # doctest: +SKIP
 
->>>>>>> upstream/master
     """
     import copy
     import random
     import pickle
 
-<<<<<<< HEAD
-    # Copying script from one obtained from John Townend.
-=======
->>>>>>> upstream/master
     # Define maximum number of events, will be the width of K
     K_width = max([max(ev_list) for ev_list in event_list])+1
     # Sometimes the randomisation generates a singular matrix - rather than
@@ -1220,13 +954,8 @@ def SVD_moments(U, s, V, stachans, event_list, n_SVs=4):
         # Deciding values for each place in kernel matrix using the pairs
         for pairsIndex in range(len(pairs)):
             # We will normalize by the minimum weight
-<<<<<<< HEAD
-            _weights = zip(*list(pairs[pairsIndex]))[0]
-            _indeces = zip(*list(pairs[pairsIndex]))[1]
-=======
             _weights = list(zip(*list(pairs[pairsIndex])))[0]
             _indeces = list(zip(*list(pairs[pairsIndex])))[1]
->>>>>>> upstream/master
             min_weight = min(_weights)
             max_weight = max(_weights)
             min_index = _indeces[np.argmin(_weights)]
@@ -1312,11 +1041,7 @@ def pick_db(indir, outdir, calpath, startdate, enddate, wavepath=None):
     import shutil
 
     kdays = ((enddate + dt.timedelta(1)) - startdate).days
-<<<<<<< HEAD
-    for i in xrange(kdays):
-=======
     for i in range(kdays):
->>>>>>> upstream/master
         day = startdate + dt.timedelta(i)
         print('Working on ' + str(day))
         sfiles = glob.glob(indir + '/' + str(day.year) + '/' +
@@ -1325,13 +1050,8 @@ def pick_db(indir, outdir, calpath, startdate, enddate, wavepath=None):
                            str(day.month).zfill(2))
         datetimes = [dt.datetime.strptime(sfiles[i].split('/')[-1],
                                           '%d-%H%M-%SL.S%Y%m')
-<<<<<<< HEAD
-                     for i in xrange(len(sfiles))]
-        sfiles = [sfiles[i] for i in xrange(len(sfiles))
-=======
                      for i in range(len(sfiles))]
         sfiles = [sfiles[i] for i in range(len(sfiles))
->>>>>>> upstream/master
                   if datetimes[i] > startdate and
                   datetimes[i] < enddate]
         if not wavepath:
@@ -1345,13 +1065,8 @@ def pick_db(indir, outdir, calpath, startdate, enddate, wavepath=None):
         for sfile in sfiles:
             # Make the picks!
             print('				Working on Sfile: '+sfile)
-<<<<<<< HEAD
-            picks = Amp_pick_sfile(sfile, wavedir, calpath)
-            del picks
-=======
             event = Amp_pick_sfile(sfile, wavedir, calpath)
             del event
->>>>>>> upstream/master
             # Copy the mag_calc.out file to the correct place
             shutil.copyfile('mag_calc.out', outdir+'/'+str(day.year)+'/' +
                             str(day.month).zfill(2)+'/'+sfile.split('/')[-1])

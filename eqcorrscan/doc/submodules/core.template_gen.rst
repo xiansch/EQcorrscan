@@ -1,10 +1,5 @@
 template_gen
 ------------
-<<<<<<< HEAD
-.. automodule:: template_gen
-    :members:
-    :private-members:
-=======
 
 .. currentmodule:: eqcorrscan.core.template_gen
 .. automodule:: eqcorrscan.core.template_gen
@@ -29,4 +24,3 @@ template_gen
        
 
     .. comment to end block
->>>>>>> upstream/master

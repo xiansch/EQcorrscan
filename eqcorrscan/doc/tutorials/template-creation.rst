@@ -1,8 +1,6 @@
 Template creation
 =================
 
-<<<<<<< HEAD
-=======
 Simple example
 --------------
 
@@ -68,7 +66,6 @@ which is useful for template storage.  However we do not constrain you to this.
 Advanced example
 ----------------
 
->>>>>>> upstream/master
 In this example we will download some data and picks from the New Zealand GeoNet
 database and make use of the functions in EQcorrscan to quickly and simply
 generate templates for use in matched-filter detection.  In the example we
@@ -110,13 +107,8 @@ download are |basemap_link|.
 
   <a href="http://matplotlib.org/basemap/users/installing.html" target="_blank">here</a>
 
-<<<<<<< HEAD
-Important considerations
-------------------------
-=======
 **Important considerations**
 
->>>>>>> upstream/master
 In this tutorial we enforce downloading of day-long data for the template
 generation.  This is to ensure that the data we make the template from, and
 the data we use for detection are processed in exactly the same way.  If we

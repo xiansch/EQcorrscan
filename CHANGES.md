@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 ## 0.1.2
 * Add handling for empty location information in sfiles.
 * Added project setup script which creates a useful directory structure and copies
@@ -39,7 +37,6 @@ sta-lta triggering at the moment.  Useful for template generations alongside
 pickers.
 * Added magnitude of completeness and b-value calculators to utils.mag_calc
 
->>>>>>> upstream/master
 ## 0.1.1
 * Cope with events not always having time_errors in them in eventtoSfile;
 * Convert Quakeml depths from m to km;
